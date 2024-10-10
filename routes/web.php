@@ -1,16 +1,10 @@
-]<?php
-<<<<<<< Updated upstream
+<?php
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backslash (\) bukan titik (.)
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\TransactionController;
-=======
-use App\Http\Controllers\Admin\UnitController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backslash (\) bukan titik (.)
-use App\Http\Controllers\Admin\PenggunaController;
->>>>>>> Stashed changes
+
 use Illuminate\Support\Facades\Route;
 // Rute untuk pengguna
 
@@ -54,13 +48,12 @@ Route::delete('/penggunas/{id}', [PenggunaController::class, 'destroy'])->name('
 Route::get('/categories', [CategoryController::class, 'index'])->name('pages.categories.index');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('pages.categories.create');
 Route::post('/categories', [CategoryController::class, 'store'])->name('pages.categories.store');
-<<<<<<< Updated upstream
 Route::get('categories/{category}', [CategoryController::class, 'edit'])->name('pages.categories.edit');
 Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
 Route::get('products/categories', [CategoryController::class, 'index']);
-=======
->>>>>>> Stashed changes
+
+
 
 // Rute untuk produk
 Route::get('/products', [ProductController::class, 'index'])->name('pages.products.index');
