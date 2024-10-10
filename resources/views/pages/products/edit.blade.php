@@ -58,6 +58,21 @@
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
+            <!-- Tambahkan Dropdown Satuan -->
+            <div class="form-group">
+                <label for="unit_id">Satuan</label>
+                <select name="unit_id" id="unit_id" class="form-control @error('unit_id') is-invalid @enderror" required>
+                    <option value="" disabled>Pilih Satuan</option>
+                    @foreach ($units as $unit)
+                        <option value="{{ $unit->id }}" {{ $unit->id == $product->unit_id ? 'selected' : '' }}>
+                            {{ $unit->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('unit_id')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
             <button type="submit" class="btn btn-primary">Update Produk</button>
             <a href="{{ route('pages.products.index') }}" class="btn btn-secondary">Kembali</a>
         </form>

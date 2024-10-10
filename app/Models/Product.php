@@ -18,4 +18,10 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class); // Pastikan ada model Category
     }
+    // Product.php
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
 }

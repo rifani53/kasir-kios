@@ -16,9 +16,13 @@ return new class extends Migration
             $table->string('nama');
             $table->decimal('harga', 10, 2); // Perbaikan tanda petik dan format
             $table->integer('stok');
+            $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('category_id');
             $table->timestamps();
 
+            $table->foreign('unit_id')->references('id')->on('units')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories') // Gunakan 'categories' sebagai nama tabel
                   ->onUpdate('cascade')
                   ->onDelete('cascade');

@@ -12,4 +12,13 @@ class Unit extends Model
     protected $fillable = [
         'name', // Menyimpan nama satuan
     ];
+<<<<<<< Updated upstream
+=======
+    // Unit.php
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+>>>>>>> Stashed changes
 }
