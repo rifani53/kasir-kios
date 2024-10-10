@@ -20,7 +20,8 @@
                 <th>Harga</th>
                 <th>Stok</th>
                 <th>Kategori</th>
-                <th>Aksi</th> <!-- Tambahkan kolom Aksi -->
+                <th>Satuan</th> <!-- Tambahkan kolom Satuan -->
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -28,14 +29,15 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $product->nama }}</td>
-                <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td> <!-- Format harga -->
+                <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
                 <td>{{ $product->stok }}</td>
                 <td>{{ $product->category->name }}</td>
+                <td>{{ $product->unit->name }}</td> <!-- Tampilkan nama satuan -->
                 <td>
                     <!-- Tombol Edit dan Delete -->
                     <form action="{{ route('pages.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                         @csrf
-                        @method('DELETE') <!-- Method DELETE untuk menghapus -->
+                        @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</button>
                     </form>
                     <a href="{{ route('pages.products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
