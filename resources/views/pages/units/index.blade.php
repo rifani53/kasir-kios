@@ -32,8 +32,7 @@
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus satuan ini?')">Hapus</button>
                     </form>
-                </td>  
-                
+                </td>                 
             </tr>
             @endforeach
         </tbody>
