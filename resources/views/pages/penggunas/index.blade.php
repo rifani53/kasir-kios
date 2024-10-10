@@ -4,14 +4,17 @@
 <div class="container">
     <h2>Daftar Pengguna</h2>
 
+    {{-- Pesan sukses setelah operasi berhasil --}}
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
+    {{-- Tombol untuk menambah pengguna baru --}}
     <a href="{{ route('pages.penggunas.create') }}" class="btn btn-primary mb-3">Tambah Pengguna</a>
 
+    {{-- Tabel daftar pengguna --}}
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -22,14 +25,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($users as $user)
+            @foreach ($penggunas as $pengguna)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
+                <td>{{ $pengguna->name }}</td>
+                <td>{{ $pengguna->email }}</td>
                 <td>
-                    <a href="{{ route('pages.penggunas.edit', $user->id) }}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('layouts.penggunas.destroy', $user->id) }}" method="POST" style="display:inline;">
+                    {{-- Tombol edit pengguna --}}
+                    <a href="{{ route('pages.penggunas.edit', $pengguna->id) }}" class="btn btn-warning">Edit</a>
+
+                    {{-- Tombol hapus pengguna --}}
+                    <form action="{{ route('pages.penggunas.destroy', $pengguna->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">Hapus</button>

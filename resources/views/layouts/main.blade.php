@@ -17,11 +17,11 @@
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Navbar -->
- @include('layouts.components.navbar')
+  @include('layouts.components.navbar')
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
- @include('layouts.components.sidebar')
+  @include('layouts.components.sidebar')
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -67,5 +67,7 @@
 <script src="{{ asset('/tamplates/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('/tamplates/dist/js/demo.js') }}"></script>
+
+<!-- Treeview Activation -->
 </body>
 </html>
