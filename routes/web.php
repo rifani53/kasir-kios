@@ -3,11 +3,17 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backslash (\) bukan titik (.)
 use App\Http\Controllers\Admin\PenggunaController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 // Rute untuk pengguna
 
+Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
+Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+Route::delete('/transactions/{id}', [TransactionController::class, 'cancel'])->name('transactions.cancel');
+Route::post('/transactions/{id}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
+Route::get('/transactions/{id}/print', [TransactionController::class, 'printReceipt'])->name('transactions.print');
 
-// Rute untuk satuan
+// Rute untuk satua
 Route::get('/units', [UnitController::class, 'index'])->name('pages.units.index'); // Menampilkan daftar satuan
 Route::get('/units/create', [UnitController::class, 'create'])->name('pages.units.create'); // Menampilkan form tambah satuan
 Route::post('/units', [UnitController::class, 'store'])->name('pages.units.store'); // Menyimpan satuan baru
@@ -26,6 +32,10 @@ Route::delete('/penggunas/{id}', [PenggunaController::class, 'destroy'])->name('
 Route::get('/categories', [CategoryController::class, 'index'])->name('pages.categories.index');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('pages.categories.create');
 Route::post('/categories', [CategoryController::class, 'store'])->name('pages.categories.store');
+Route::get('categories/{category}', [CategoryController::class, 'edit'])->name('pages.categories.edit');
+Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+Route::get('products/categories', [CategoryController::class, 'index']);
 
 // Rute untuk produk
 Route::get('/products', [ProductController::class, 'index'])->name('pages.products.index');

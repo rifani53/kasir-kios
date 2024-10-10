@@ -30,4 +30,37 @@ class CategoryController extends Controller
 
         return redirect()->route('pages.categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
+    public function show(Category $category)
+    {
+        return view('categories.show', compact('category'));
+    }
+
+    // Menampilkan form untuk mengedit kategori
+    public function edit(Category $category)
+    {
+        return view('pages.categories.edit', compact('category'));
+    }
+
+    // Mengupdate kategori
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category->update($request->all());
+
+        return redirect()->route('pages.categories.index')
+                         ->with('success', 'Kategori berhasil diperbarui.');
+    }
+
+    // Menghapus kategori
+    public function destroy(Category $category)
+{
+    $category->delete();
+    return redirect()->route('pages.categories.index')
+                     ->with('success', 'Kategori berhasil dihapus.');
 }
+
+}
+

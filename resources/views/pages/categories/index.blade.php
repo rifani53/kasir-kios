@@ -21,11 +21,19 @@
         </thead>
         <tbody>
             @foreach ($categories as $category)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $category->name }}</td>
-            </tr>
-            @endforeach
+        <tr>
+            <td>{{ $loop->iteration }}</td>
+            <td>{{ $category->name }}</td>
+            <td>
+                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">Delete</button>
+                </form>
+                <a class="btn btn-primary btn-sm" href="{{ route('pages.categories.edit', $category->id) }}">Edit</a>
+            </td>
+        </tr>
+        @endforeach
         </tbody>
     </table>
 </div>
