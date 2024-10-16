@@ -1,85 +1,79 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash; // Tambahkan ini
+use Illuminate\Support\Facades\Hash;
 
 class PenggunaController extends Controller
 {
     public function index()
     {
-        // Mengambil semua data pengguna dari database
-        $penggunas = Pengguna::all();
-        // Mengirim data pengguna ke view
-        return view('pages.penggunas.index', compact('penggunas'));
+        $penggunas = Pengguna::all(); // Mengambil semua data pengguna
+        return view('pages.penggunas.index', compact('penggunas')); // Mengirim data ke view
     }
 
+    // Menampilkan formulir untuk menambah pengguna
     public function create()
     {
-        // Menampilkan form tambah pengguna
-        return view('pages.penggunas.create');
+        return view('pages.penggunas.create'); // Mengirim tampilan untuk menambah pengguna
     }
 
+    // Menyimpan pengguna baru
     public function store(Request $request)
     {
-        // Validasi data input dari form
+        // Validasi data yang diterima dari formulir
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:penggunas', // Sesuaikan nama tabel
-            'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|email|unique:penggunas,',
+            'password' => 'required|string|min:8',
         ]);
 
         // Membuat pengguna baru
         Pengguna::create([
-            'name' => $request->name,
+            'name' => $request->nama_pengguna,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Menggunakan Hash untuk password
+            'password' => Hash::make($request->password), // Meng-hash password
         ]);
 
-        // Redirect ke halaman daftar pengguna dengan pesan sukses
-        return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil dibuat.');
+        return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil ditambahkan.'); // Redirect dengan pesan sukses
     }
 
-    public function edit(Pengguna $pengguna)
+    // Menampilkan formulir untuk mengedit pengguna
+    public function edit($id)
     {
-        // Menampilkan form edit pengguna dengan data yang akan diedit
-        return view('pages.penggunas.edit', compact('pengguna'));
+        $pengguna = Pengguna::findOrFail($id);
+        return view('pages.penggunas.edit', compact('pengguna')); // Mengirim data pengguna ke view
     }
 
-    public function update(Request $request, Pengguna $pengguna)
+    // Memperbarui data pengguna
+    public function update(Request $request, $id)
     {
-        // Validasi data input
+        // Validasi data yang diterima dari formulir
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:penggunas,email,' . $pengguna->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'email' => 'required|email|unique:penggunas,email,' . $id, // tambahkan ID
         ]);
+        
 
-        // Update data pengguna
-        $pengguna->name = $request->name;
-        $pengguna->email = $request->email;
+        $pengguna = Pengguna::findOrFail($id); // Mengambil pengguna berdasarkan ID
+        $pengguna->update($request->except('password')); // Memperbarui pengguna kecuali password
 
-        // Jika password diisi, update password
+        // Mengupdate password jika diberikan
         if ($request->filled('password')) {
-            $pengguna->password = Hash::make($request->password);
+            $pengguna->update(['password' => bcrypt($request->password)]); // Meng-hash password
         }
 
-        // Simpan perubahan ke database
-        $pengguna->save();
-
-        // Redirect ke halaman daftar pengguna dengan pesan sukses
-        return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil diperbarui.');
+        return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil diperbarui.'); // Redirect dengan pesan sukses
     }
 
-    public function destroy(Pengguna $pengguna)
+    // Menghapus pengguna
+    public function destroy($id)
     {
-        // Menghapus pengguna
-        $pengguna->delete();
+        $pengguna = Pengguna::findOrFail($id); // Mengambil pengguna berdasarkan ID
+        $pengguna->delete(); // Menghapus pengguna
 
-        // Redirect ke halaman daftar pengguna dengan pesan sukses
-        return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil dihapus.');
+        return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil dihapus.'); // Redirect dengan pesan sukses
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,16 +13,20 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->decimal('harga', 10, 2); // Perbaikan tanda petik dan format
+            $table->string('jenis');// Tambahkan kolom jenis
+            $table->string('merek'); 
+            $table->string('ukuran'); // Tambahkan kolom ukuran
+            $table->decimal('harga', 10, 2); // Format harga dengan desimal
             $table->integer('stok');
-            $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('unit_id');
             $table->timestamps();
 
-            $table->foreign('unit_id')->references('id')->on('units')
+            // Definisi relasi foreign key
+            $table->foreign('category_id')->references('id')->on('categories')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories') // Gunakan 'categories' sebagai nama tabel
+            $table->foreign('unit_id')->references('id')->on('units')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
         });

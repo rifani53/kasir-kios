@@ -1,4 +1,4 @@
-@extends('layouts.main')
+\@extends('layouts.main')
 
 @section('content')
 <div class="container">
@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('pages.penggunas.update', $pengguna->id) }}" method="POST">
+    <form action="{{ route('pages.penggunas.update', ['id' => $pengguna->id]) }}" method="POST">
         @csrf
         @method('PUT')
 

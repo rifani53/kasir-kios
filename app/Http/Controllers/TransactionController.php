@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Transaction;
@@ -32,7 +31,10 @@ class TransactionController extends Controller
         // Mengambil transaksi yang statusnya 'pending' beserta produk terkait
         $transactions = Transaction::with('product.category')->where('status', 'pending')->get();
 
-        return view('pages.transactions.index', compact('products', 'categories', 'selectedCategoryId', 'selectedCategoryName', 'transactions'));
+        // Hitung total harga dari semua transaksi yang 'pending'
+        $totalAmount = $transactions->sum('total_price');
+
+        return view('pages.transactions.index', compact('products', 'categories', 'selectedCategoryId', 'selectedCategoryName', 'transactions', 'totalAmount'));
     }
 
     // Menambah transaksi (banyak produk sekaligus)

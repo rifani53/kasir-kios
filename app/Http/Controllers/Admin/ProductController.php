@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Unit; // Jangan lupa import model Unit
+use App\Models\Unit;
+use App\Models\MasterProduct; // Import model MasterProduct
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,9 +15,10 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $units = Unit::all(); // Ambil semua satuan
+        $units = Unit::all();
+        $masterProducts = MasterProduct::all(); // Ambil semua master produk
 
-        return view('pages.products.create', compact('categories', 'units'));
+        return view('pages.products.create', compact('categories', 'units', 'masterProducts'));
     }
 
     // Menyimpan produk baru ke database
@@ -23,30 +26,53 @@ class ProductController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
+            'jenis' => 'required|string|max:255',
+            'merek' => 'required|string|max:255',
+            'ukuran' => 'required|string|max:255',
             'harga' => 'required|numeric',
             'stok' => 'required|integer',
             'category_id' => 'required|exists:categories,id',
-            'unit_id' => 'required|exists:units,id', // Validasi satuan
+            'unit_id' => 'required|exists:units,id',
         ]);
 
-        Product::create([
-            'nama' => $request->nama,
-            'harga' => $request->harga,
-            'stok' => $request->stok,
-            'category_id' => $request->category_id,
-            'unit_id' => $request->unit_id, // Simpan unit_id
-        ]);
+        // Cek apakah produk dengan nama, jenis, dan ukuran yang sama sudah ada
+        $product = Product::where('nama', $request->nama)
+                          ->where('jenis', $request->jenis)
+                          ->where('ukuran', $request->ukuran)
+                          ->where('merek', $request->ukuran)
+                          ->first();
 
-        return redirect()->route('pages.products.index')->with('success', 'Produk berhasil ditambahkan.');
+        if ($product) {
+            // Jika produk ditemukan, tambahkan stok
+            $product->stok += $request->stok;
+            $product->harga = $request->harga; // Perbarui harga jika diinginkan
+            $product->save();
+        } else {
+            // Jika produk tidak ditemukan, buat produk baru
+            Product::create([
+                'nama' => $request->nama,
+                'jenis' => $request->jenis,
+                'merek' => $request->merek,
+                'ukuran' => $request->ukuran,
+                'harga' => $request->harga,
+                'stok' => $request->stok,
+                'category_id' => $request->category_id,
+                'unit_id' => $request->unit_id,
+            ]);
+        }
+
+        return redirect()->route('pages.products.index')->with('success', 'Produk berhasil ditambahkan atau diperbarui.');
     }
 
     // Menampilkan form edit produk
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $categories = Category::all(); // Mengambil semua kategori untuk dropdown
-        $units = Unit::all(); // Ambil semua satuan untuk dropdown
-        return view('pages.products.edit', compact('product', 'categories', 'units'));
+        $categories = Category::all(); 
+        $units = Unit::all(); 
+        $masterProducts = MasterProduct::all(); 
+
+        return view('pages.products.edit', compact('product', 'categories', 'units', 'masterProducts'));
     }
 
     // Mengupdate produk di database
@@ -54,19 +80,25 @@ class ProductController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
+            'jenis' => 'required|string|max:255',
+            'merek' => 'required|string|max:255', 
+            'ukuran' => 'required|string|max:255', 
             'harga' => 'required|numeric',
             'stok' => 'required|integer',
             'category_id' => 'required|exists:categories,id',
-            'unit_id' => 'required|exists:units,id', // Validasi satuan
+            'unit_id' => 'required|exists:units,id',
         ]);
 
         $product = Product::findOrFail($id);
         $product->update([
             'nama' => $request->nama,
+            'jenis' => $request->jenis, 
+            'merek' => $request->merek, 
+            'ukuran' => $request->ukuran,
             'harga' => $request->harga,
             'stok' => $request->stok,
             'category_id' => $request->category_id,
-            'unit_id' => $request->unit_id, // Update unit_id
+            'unit_id' => $request->unit_id,
         ]);
 
         return redirect()->route('pages.products.index')->with('success', 'Produk berhasil diperbarui.');
@@ -84,7 +116,7 @@ class ProductController extends Controller
     // Menampilkan daftar produk
     public function index()
     {
-        $products = Product::with('category', 'unit')->get(); // Pastikan relasi 'unit' di-load
+        $products = Product::with('category', 'unit')->get();
         return view('pages.products.index', compact('products'));
     }
 }

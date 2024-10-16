@@ -1,5 +1,3 @@
-<!-- resources/views/transactions/index.blade.php -->
-
 @extends('layouts.main')
 
 @section('content')
@@ -29,40 +27,46 @@
         </div>
     </form>
 
-    <!-- Daftar Produk -->
+    <!-- Daftar Produk dalam Tabel -->
     <h2>Produk</h2>
     <form method="POST" action="{{ route('transactions.store') }}">
         @csrf
-        <div class="row">
-            @foreach($products as $product)
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="product_ids[]" value="{{ $product->id }}" id="product_{{ $product->id }}">
-                                <label class="form-check-label" for="product_{{ $product->id }}">
-                                    <h5 class="card-title">{{ $product->nama }}</h5>
-                                </label>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Pilih Produk</th>
+                    <th>Nama Produk</th>
+                    <th>Harga</th>
+                    <th>Kategori</th>
+                    <th>Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($products as $product)
+                <tr>
+                    <td>
+                        <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" id="product_{{ $product->id }}">
+                    </td>
+                    <td>
+                        <label for="product_{{ $product->id }}">{{ $product->nama }}</label>
+                    </td>
+                    <td>Rp {{ number_format($product->harga, 2) }}</td>
+                    <td>{{ $product->category->name }}</td>
+                    <td>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-outline-secondary btn-decrease" data-target="quantity_{{ $product->id }}">-</button>
                             </div>
-                            <p class="card-text">Harga: Rp {{ number_format($product->harga, 2) }}</p>
-                            <p class="card-text">Kategori: {{ $product->category->name }}</p>
-                            <div class="form-group">
-                                <label for="quantity_{{ $product->id }}">Jumlah:</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button type="button" class="btn btn-outline-secondary btn-decrease" data-target="quantity_{{ $product->id }}">-</button>
-                                    </div>
-                                    <input type="number" name="quantities[{{ $product->id }}]" id="quantity_{{ $product->id }}" class="form-control quantity-input" value="1" min="1" required>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-outline-secondary btn-increase" data-target="quantity_{{ $product->id }}">+</button>
-                                    </div>
-                                </div>
+                            <input type="number" name="quantities[{{ $product->id }}]" id="quantity_{{ $product->id }}" class="form-control quantity-input" value="1" min="1" required>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary btn-increase" data-target="quantity_{{ $product->id }}">+</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
         <button type="submit" class="btn btn-primary mt-4">Tambah Transaksi</button>
     </form>
 
@@ -71,7 +75,7 @@
     @if($transactions->isEmpty())
         <p>Tidak ada transaksi berlangsung.</p>
     @else
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Produk</th>
@@ -83,27 +87,31 @@
             </thead>
             <tbody>
                 @foreach($transactions as $transaction)
-                    <tr>
-                        <td>{{ $transaction->product->nama }}</td>
-                        <td>{{ $transaction->quantity }}</td>
-                        <td>Rp {{ number_format($transaction->total_price, 2) }}</td>
-                        <td>{{ ucfirst($transaction->status) }}</td>
-                        <td>
-                            <form method="POST" action="{{ route('transactions.cancel', $transaction->id) }}" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin membatalkan transaksi ini?')">Batal</button>
-                            </form>
-                            <form method="POST" action="{{ route('transactions.complete', $transaction->id) }}" style="display:inline-block;">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
-                            </form>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>{{ $transaction->product->nama }}</td>
+                    <td>{{ $transaction->quantity }}</td>
+                    <td>Rp {{ number_format($transaction->total_price, 2) }}</td>
+                    <td>{{ ucfirst($transaction->status) }}</td>
+                    <td>
+                        <form method="POST" action="{{ route('transactions.cancel', $transaction->id) }}" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin membatalkan transaksi ini?')">Batal</button>
+                        </form>
+                        <form method="POST" action="{{ route('transactions.complete', $transaction->id) }}" style="display:inline-block;">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
+                        </form>
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
     @endif
+
+    <!-- Total Transaksi -->
+    <h2>Total Transaksi</h2>
+    <p>Total: Rp {{ number_format($totalAmount, 2) }}</p>
 </div>
 
 <!-- JavaScript untuk tombol plus dan minus -->

@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backslash (\) bukan titik (.)
 use App\Http\Controllers\Admin\PenggunaController;
@@ -22,10 +22,11 @@ Route::get('/units/{unit}/edit', [UnitController::class, 'edit'])->name('pages.u
 Route::put('/units/{unit}', [UnitController::class, 'update'])->name('pages.units.update'); // Mengupdate satuan
 Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->name('pages.units.destroy'); // Menghapus satuan
 
+
 Route::get('/penggunas', [PenggunaController::class, 'index'])->name('pages.penggunas.index');
 Route::get('/penggunas/create', [PenggunaController::class, 'create'])->name('pages.penggunas.create');
 Route::post('/penggunas', [PenggunaController::class, 'store'])->name('pages.penggunas.store');
-Route::get('/penggunas/{id}/edit', [PenggunaController::class, 'edit'])->name('pages.penggunas.edit');
+Route::get('/penggunas/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pages.penggunas.edit');
 Route::put('/penggunas/{id}', [PenggunaController::class, 'update'])->name('pages.penggunas.update');
 Route::delete('/penggunas/{id}', [PenggunaController::class, 'destroy'])->name('pages.penggunas.destroy');
 
@@ -37,10 +38,11 @@ Route::get('/units/{unit}/edit', [UnitController::class, 'edit'])->name('pages.u
 Route::put('/units/{unit}', [UnitController::class, 'update'])->name('pages.units.update'); // Mengupdate satuan
 Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->name('pages.units.destroy'); // Menghapus satuan
 
+
 Route::get('/penggunas', [PenggunaController::class, 'index'])->name('pages.penggunas.index');
 Route::get('/penggunas/create', [PenggunaController::class, 'create'])->name('pages.penggunas.create');
 Route::post('/penggunas', [PenggunaController::class, 'store'])->name('pages.penggunas.store');
-Route::get('/penggunas/{id}/edit', [PenggunaController::class, 'edit'])->name('pages.penggunas.edit');
+Route::get('/penggunas/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pages.penggunas.edit');
 Route::put('/penggunas/{id}', [PenggunaController::class, 'update'])->name('pages.penggunas.update');
 Route::delete('/penggunas/{id}', [PenggunaController::class, 'destroy'])->name('pages.penggunas.destroy');
 

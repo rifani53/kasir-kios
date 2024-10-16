@@ -19,6 +19,7 @@ class pengguna extends Authenticatable
         'name',
         'email',
         'password',
+        'isAdmin',
     ];
 
     // Atribut yang disembunyikan dari array dan JSON
