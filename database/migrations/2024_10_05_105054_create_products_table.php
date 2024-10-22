@@ -14,10 +14,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('jenis');// Tambahkan kolom jenis
-            $table->string('merek'); 
+            $table->string('merek');
             $table->string('ukuran'); // Tambahkan kolom ukuran
             $table->decimal('harga', 10, 2); // Format harga dengan desimal
-            $table->integer('stok');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('unit_id');
             $table->timestamps();

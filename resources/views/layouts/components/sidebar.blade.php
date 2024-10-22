@@ -39,6 +39,10 @@
                   (object)[
                     "title" => "Kelola Satuan",
                     "path" => route('pages.units.index'),
+                  ],
+                  (object)[
+                    "title" => "Master Produk",
+                    "path" => route('pages.master_products.index')
                   ]
                 ],
               ],

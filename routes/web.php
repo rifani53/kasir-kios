@@ -4,8 +4,19 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backslash (\) bukan titik (.)
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Admin\MasterProductController;
+
+
 
 use Illuminate\Support\Facades\Route;
+// rute untuk masterproduct
+Route::get('/master-products/create', [MasterProductController::class, 'create'])->name('pages.master_products.create');
+Route::post('/master-products/store', [MasterProductController::class, 'store'])->name('master_products.store');
+Route::get('/master-products', [MasterProductController::class, 'index'])->name('pages.master_products.index');
+Route::get('/master-products/{id}/edit', [MasterProductController::class, 'edit'])->name('pages.master_products.edit');
+Route::put('/master-products/{id}', [MasterProductController::class, 'update'])->name('master_products.update');
+Route::delete('/master-products/{id}', [MasterProductController::class, 'destroy'])->name('master_products.destroy');
+
 // Rute untuk pengguna
 
 Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
