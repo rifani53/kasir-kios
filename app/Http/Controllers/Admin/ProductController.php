@@ -24,6 +24,7 @@ class ProductController extends Controller
     // Menyimpan produk baru ke database
     public function store(Request $request)
     {
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
@@ -37,10 +38,11 @@ class ProductController extends Controller
 
         // Cek apakah produk dengan nama, jenis, dan ukuran yang sama sudah ada
         $product = Product::where('nama', $request->nama)
-                          ->where('jenis', $request->jenis)
-                          ->where('ukuran', $request->ukuran)
-                          ->where('merek', $request->ukuran)
-                          ->first();
+                  ->where('jenis', $request->jenis)
+                  ->where('ukuran', $request->ukuran)
+                  ->where('merek', $request->merek) // <- Perbaikan di sini
+                  ->first();
+
 
         if ($product) {
             // Jika produk ditemukan, tambahkan stok

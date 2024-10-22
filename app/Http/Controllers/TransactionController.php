@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
+    
     // Menampilkan halaman transaksi dengan produk dan filter kategori
     public function index(Request $request)
     {

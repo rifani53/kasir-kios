@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backslash (\) bukan titik (.)
@@ -7,6 +8,7 @@ use App\Http\Controllers\TransactionController;
 
 use Illuminate\Support\Facades\Route;
 // Rute untuk pengguna
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dashboard.index');
 
 Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
 Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
