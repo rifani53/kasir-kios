@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\MasterProductController;
 
 
 use Illuminate\Support\Facades\Route;
-// rute untuk masterproduct
+// rute untuk masterproductk
 Route::get('/master-products/create', [MasterProductController::class, 'create'])->name('pages.master_products.create');
 Route::post('/master-products/store', [MasterProductController::class, 'store'])->name('master_products.store');
 Route::get('/master-products', [MasterProductController::class, 'index'])->name('pages.master_products.index');
