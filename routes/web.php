@@ -18,7 +18,7 @@ Route::get('/master-products/{id}/edit', [MasterProductController::class, 'edit'
 Route::put('/master-products/{id}', [MasterProductController::class, 'update'])->name('master_products.update');
 Route::delete('/master-products/{id}', [MasterProductController::class, 'destroy'])->name('master_products.destroy');
 
-// Rute untuk pengguna
+// Rute untuk dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dashboard.index');
 
 Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
@@ -26,8 +26,9 @@ Route::post('/transactions', [TransactionController::class, 'store'])->name('tra
 Route::delete('/transactions/{id}', [TransactionController::class, 'cancel'])->name('transactions.cancel');
 Route::post('/transactions/{id}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
 Route::get('/transactions/{id}/print', [TransactionController::class, 'printReceipt'])->name('transactions.print');
+Route::get('/transactions/history', [TransactionController::class, 'history'])->name('pages.transactions.history');
 
-// Rute untuk satua
+// Rute untuk satuan
 Route::get('/units', [UnitController::class, 'index'])->name('pages.units.index'); // Menampilkan daftar satuan
 Route::get('/units/create', [UnitController::class, 'create'])->name('pages.units.create'); // Menampilkan form tambah satuan
 Route::post('/units', [UnitController::class, 'store'])->name('pages.units.store'); // Menyimpan satuan baru
@@ -35,7 +36,7 @@ Route::get('/units/{unit}/edit', [UnitController::class, 'edit'])->name('pages.u
 Route::put('/units/{unit}', [UnitController::class, 'update'])->name('pages.units.update'); // Mengupdate satuan
 Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->name('pages.units.destroy'); // Menghapus satuan
 
-
+//route untuk pengguna
 Route::get('/penggunas', [PenggunaController::class, 'index'])->name('pages.penggunas.index');
 Route::get('/penggunas/create', [PenggunaController::class, 'create'])->name('pages.penggunas.create');
 Route::post('/penggunas', [PenggunaController::class, 'store'])->name('pages.penggunas.store');

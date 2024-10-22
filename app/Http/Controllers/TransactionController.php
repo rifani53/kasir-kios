@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
-    
+
     // Menampilkan halaman transaksi dengan produk dan filter kategori
     public function index(Request $request)
     {
@@ -37,6 +37,17 @@ class TransactionController extends Controller
 
         return view('pages.transactions.index', compact('products', 'categories', 'selectedCategoryId', 'selectedCategoryName', 'transactions', 'totalAmount'));
     }
+    public function history()
+{
+    // Ambil semua transaksi dengan relasi produk dan kategori, urutkan berdasarkan tanggal
+    $transactions = Transaction::with('product.category')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Return view untuk menampilkan riwayat transaksi
+    return view('pages.transactions.history', compact('transactions'));
+}
+
 
     // Menambah transaksi (banyak produk sekaligus)
     public function store(Request $request)
@@ -91,16 +102,24 @@ class TransactionController extends Controller
 
     // Menandai transaksi sebagai selesai dan mencetak struk
     public function complete($id)
-    {
-        $transaction = Transaction::findOrFail($id);
+{
+    $transaction = Transaction::findOrFail($id);
 
-        if ($transaction->status === 'pending') {
-            $transaction->update(['status' => 'completed']);
-            return redirect()->route('transactions.print', $transaction->id);
-        }
+    if ($transaction->status === 'pending') {
+        $transaction->update(['status' => 'completed']);
 
-        return redirect()->back()->with('error', 'Transaksi tidak dapat diselesaikan.');
+        // Generate PDF Struk
+        $pdf = Pdf::loadView('pages.transactions.receipt', compact('transaction'));
+
+        // Nama file PDF
+        $pdfName = 'struk-transaksi-' . $transaction->id . '.pdf';
+
+        // Kirim file langsung untuk diunduh
+        return $pdf->download($pdfName);
     }
+
+    return redirect()->back()->with('error', 'Transaksi tidak dapat diselesaikan.');
+}
 
     // Mencetak struk
     public function printReceipt($id)

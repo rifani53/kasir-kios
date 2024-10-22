@@ -12,6 +12,8 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+    <a href="{{ route('pages.transactions.history') }}" class="btn btn-primary mb-3">Riwayat</a>
+
     <!-- Filter Kategori -->
     <form method="GET" action="{{ route('pages.transactions.index') }}" class="mb-4">
         <div class="form-group">
