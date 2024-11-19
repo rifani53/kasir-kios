@@ -21,6 +21,7 @@
                 <th>No</th>
                 <th>Nama</th>
                 <th>Email</th>
+                <th>Posisi</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -30,6 +31,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $pengguna->name }}</td>
                 <td>{{ $pengguna->email }}</td>
+                <td>{{ $pengguna->posisi }}</td>
                 <td>
                     {{-- Tombol edit pengguna --}}
                     <a href="{{ route('pages.penggunas.edit', $pengguna->id) }}" class="btn btn-warning">Edit</a>

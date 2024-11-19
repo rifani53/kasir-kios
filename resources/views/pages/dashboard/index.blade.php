@@ -8,7 +8,7 @@
         <div class="small-box bg-info">
             <div class="inner">
                 <h3>1,726</h3>
-                <p>Total Barang Yang Ada</p>
+                <p>Total Barang </p>
             </div>
             <div class="icon">
                 <i class="fas fa-shopping-bag"></i>

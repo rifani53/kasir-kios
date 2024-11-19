@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -25,16 +26,18 @@ class PenggunaController extends Controller
     {
         // Validasi data yang diterima dari formulir
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:penggunas,',
+            'name' => 'required|string|max:255', // pastikan validasi sesuai dengan field input
+            'email' => 'required|email|unique:penggunas,email',
             'password' => 'required|string|min:8',
+            'posisi' => 'required|in:admin,kasir',
         ]);
 
-        // Membuat pengguna baru
+        // Menyimpan pengguna baru dan mengenkripsi password
         Pengguna::create([
-            'name' => $request->nama_pengguna,
+            'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Meng-hash password
+            'password' => Hash::make($request->password), // Hash password sebelum disimpan
+            'posisi' => $request->posisi,
         ]);
 
         return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil ditambahkan.'); // Redirect dengan pesan sukses
@@ -53,16 +56,16 @@ class PenggunaController extends Controller
         // Validasi data yang diterima dari formulir
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:penggunas,email,' . $id, // tambahkan ID
+            'email' => 'required|email|unique:penggunas,email,' . $id, // tambahkan ID untuk pengecualian email
+            'posisi' => 'required|in:admin,kasir',
         ]);
-        
 
         $pengguna = Pengguna::findOrFail($id); // Mengambil pengguna berdasarkan ID
         $pengguna->update($request->except('password')); // Memperbarui pengguna kecuali password
 
         // Mengupdate password jika diberikan
         if ($request->filled('password')) {
-            $pengguna->update(['password' => bcrypt($request->password)]); // Meng-hash password
+            $pengguna->update(['password' => Hash::make($request->password)]); // Meng-hash password
         }
 
         return redirect()->route('pages.penggunas.index')->with('success', 'Pengguna berhasil diperbarui.'); // Redirect dengan pesan sukses

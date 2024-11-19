@@ -38,6 +38,13 @@
             <label for="password_confirmation">Konfirmasi Kata Sandi</label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
         </div>
+        <div class="form-group">
+            <label for="posisi">Posisi</label>
+            <select name="posisi" class="form-control" required>
+                <option value="admin" {{ $akun->posisi == 'admin' ? 'selected' : '' }}>Admin</option>
+                <option value="kasir" {{ $akun->posisi == 'kasir' ? 'selected' : '' }}>Kasir</option>
+            </select>
+        </div>
 
         <button type="submit" class="btn btn-primary">Update Pengguna</button>
         <a href="{{ route('pages.penggunas.index') }}" class="btn btn-secondary">Kembali</a>

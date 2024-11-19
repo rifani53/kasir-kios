@@ -13,6 +13,7 @@ class CreatePenggunasTable extends Migration
             $table->string('name'); // Nama pengguna
             $table->string('email')->unique(); // Email pengguna
             $table->string('password'); // Kata sandi
+            $table->enum('posisi', ['admin', 'kasir']); // Posisi (role) bisa admin atau kasir
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ class DashboardController extends Controller
         // Data yang ingin dikirim ke view (opsional)
         $data = [
             'title' => 'Dashboard',
-            'welcomeMessage' => 'Selamat datang di halaman Dashboard1',
+            'welcomeMessage' => 'Selamat datang di halaman Dashboard',
         ];
 
         // Return view dashboard
