@@ -11,7 +11,7 @@ class Product extends Model
 
     // Daftar kolom yang bisa diisi secara massal
     protected $fillable = [
-        'nama', 'jenis', 'merek', 'ukuran', 'harga', 'stok', 'category_id', 'unit_id' // Tambahkan 'jenis' dan 'ukuran'
+        'nama', 'jenis', 'merek', 'ukuran', 'harga', 'stok', 'category_id', 'unit_id', 'sales_count', 'total_sold' // Tambahkan 'jenis' dan 'ukuran'
     ];
 
     // Mendefinisikan relasi dengan model Category

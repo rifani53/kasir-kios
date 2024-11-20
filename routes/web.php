@@ -6,11 +6,41 @@ use App\Http\Controllers\Admin\CategoryController; // Pastikan menggunakan backs
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Admin\MasterProductController;
+use App\Http\Controllers\PDFController;
+use App\Http\Controllers\Admin\UserController;
+
+
 
 
 
 use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::get('/login', function () {
+    return view('pages.Authorization.login1');
+})->name('login');
+
+// Route untuk proses login dan register
+Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::post('/register', [UserController::class, 'register'])->name('register');
+
+// Route untuk logout
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+// Route untuk halaman dashboard setelah login atau register berhasil
+Route::middleware('auth')->group(function () {
+    // Route untuk halaman dashboard, hanya bisa diakses jika login
+    Route::view('/dashboard', 'pages.dashboard.index')->name('pages.dashboard.index');
+});
+
+
+
+Route::post('/generate-invoice', [PDFController::class, 'generateInvoice'])->name('generate.invoice');
 // rute untuk masterproductk
+
 Route::get('/master-products/create', [MasterProductController::class, 'create'])->name('pages.master_products.create');
 Route::post('/master-products/store', [MasterProductController::class, 'store'])->name('master_products.store');
 Route::get('/master-products', [MasterProductController::class, 'index'])->name('pages.master_products.index');
@@ -27,6 +57,7 @@ Route::delete('/transactions/{id}', [TransactionController::class, 'cancel'])->n
 Route::post('/transactions/{id}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
 Route::get('/transactions/{id}/print', [TransactionController::class, 'printReceipt'])->name('transactions.print');
 Route::get('/transactions/history', [TransactionController::class, 'history'])->name('pages.transactions.history');
+Route::post('/transactions/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
 
 // Rute untuk satuan
 Route::get('/units', [UnitController::class, 'index'])->name('pages.units.index'); // Menampilkan daftar satuan

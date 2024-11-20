@@ -101,25 +101,50 @@ class TransactionController extends Controller
     }
 
     // Menandai transaksi sebagai selesai dan mencetak struk
-    public function complete($id)
-{
-    $transaction = Transaction::findOrFail($id);
+    public function complete(Request $request)
+    {
+        $request->validate([
+            'transaction_ids' => 'required|array|min:1',
+            'transaction_ids.*' => 'exists:transactions,id',
+        ], [
+            'transaction_ids.required' => 'Pilih minimal satu transaksi.',
+            'transaction_ids.*.exists' => 'Transaksi tidak valid.',
+        ]);
 
-    if ($transaction->status === 'pending') {
-        $transaction->update(['status' => 'completed']);
+        $pdfData = []; // Menyimpan data untuk PDF
 
-        // Generate PDF Struk
-        $pdf = Pdf::loadView('pages.transactions.receipt', compact('transaction'));
+        // Mulai transaksi database untuk memastikan atomisitas
+        DB::transaction(function () use ($request, &$pdfData) {
+            $transactionIds = $request->input('transaction_ids');
+            $transactions = Transaction::whereIn('id', $transactionIds)->get();
+
+            foreach ($transactions as $transaction) {
+                $transaction->update(['status' => 'completed']);
+
+                // Update jumlah terjual dan frekuensi penjualan
+                $product = $transaction->product;
+                $product->increment('total_sold', $transaction->quantity);
+                $product->increment('sales_count');
+
+                // Simpan data untuk PDF
+                $pdfData[] = [
+                    'product_name' => $product->nama,
+                    'quantity' => $transaction->quantity,
+                    'total_price' => $transaction->total_price,
+                ];
+            }
+        });
+
+        // Generate PDF setelah semua transaksi diselesaikan
+        $pdf = PDF::loadView('pages.transactions.receipt_bulk', ['transactions' => $pdfData]);
 
         // Nama file PDF
-        $pdfName = 'struk-transaksi-' . $transaction->id . '.pdf';
+        $pdfName = 'transaksi_' . now()->format('Ymd_His') . '.pdf';
 
-        // Kirim file langsung untuk diunduh
+        // Kirim file PDF untuk diunduh
         return $pdf->download($pdfName);
     }
 
-    return redirect()->back()->with('error', 'Transaksi tidak dapat diselesaikan.');
-}
 
     // Mencetak struk
     public function printReceipt($id)

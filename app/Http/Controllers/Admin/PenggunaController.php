@@ -32,7 +32,7 @@ class PenggunaController extends Controller
 
         // Membuat pengguna baru
         Pengguna::create([
-            'name' => $request->nama_pengguna,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password), // Meng-hash password
         ]);
@@ -55,7 +55,7 @@ class PenggunaController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:penggunas,email,' . $id, // tambahkan ID
         ]);
-        
+
 
         $pengguna = Pengguna::findOrFail($id); // Mengambil pengguna berdasarkan ID
         $pengguna->update($request->except('password')); // Memperbarui pengguna kecuali password
