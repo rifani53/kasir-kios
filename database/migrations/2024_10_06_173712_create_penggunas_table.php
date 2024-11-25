@@ -12,7 +12,10 @@ class CreatePenggunasTable extends Migration
             $table->id();
             $table->string('name'); // Nama pengguna
             $table->string('email')->unique(); // Email pengguna
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password'); // Kata sandi
+            $table->rememberToken();
+            $table->enum('posisi', ['admin', 'kasir']); // Posisi (role) bisa admin atau kasir
             $table->timestamps();
         });
     }
