@@ -23,7 +23,7 @@
 
     <!-- Data Transaksi -->
     <h2>Data Transaksi</h2>
-    @if($transactions->isEmpty())
+    @if($details->isEmpty())
         <p>Tidak ada transaksi pada periode ini.</p>
     @else
         <table class="table table-bordered">
@@ -32,18 +32,20 @@
                     <th>Tanggal</th>
                     <th>Produk</th>
                     <th>Jumlah</th>
+                    <th>Harga Satuan</th>
                     <th>Total Harga</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($transactions as $transaction)
+                @foreach($details as $detail)
                 <tr>
-                    <td>{{ $transaction->created_at->format('d-m-Y') }}</td>
-                    <td>{{ $transaction->product->nama }}</td>
-                    <td>{{ $transaction->quantity }}</td>
-                    <td>Rp {{ number_format($transaction->total_price, 2) }}</td>
-                    <td>{{ ucfirst($transaction->status) }}</td>
+                    <td>{{ $detail->transaction->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $detail->product->nama }}</td>
+                    <td>{{ $detail->quantity }}</td>
+                    <td>Rp {{ number_format($detail->product->harga ?? 0, 2, ',', '.') }}</td>
+                    <td>Rp {{ number_format($detail->quantity * $detail->product->harga, 2, ',', '.') }}</td>
+                    <td>{{ ucfirst($detail->transaction->status) }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -51,7 +53,7 @@
     @endif
 
     <!-- Total Pemasukan -->
-    <h3>Total Pemasukan: Rp {{ number_format($totalIncome, 2) }}</h3>
+    <h3>Total Pemasukan: Rp {{ number_format($totalIncome, 2, ',', '.') }}</h3>
 
     <!-- Tombol Export -->
     <form method="POST" action="{{ route('pages.laporan.export') }}">

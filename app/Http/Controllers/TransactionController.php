@@ -106,6 +106,7 @@ public function history(Request $request)
     // Jika tidak ada transaksi pending, buat transaksi baru
     if (!$transaction) {
         $transaction = Transaction::create([
+            'product_id' => $product->id,
             'status' => 'pending', // status awal adalah pending
         ]);
     }

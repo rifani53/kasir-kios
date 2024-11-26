@@ -41,8 +41,8 @@
         <div class="form-group">
             <label for="posisi">Posisi</label>
             <select name="posisi" class="form-control" required>
-                <option value="admin" {{ $akun->posisi == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="kasir" {{ $akun->posisi == 'kasir' ? 'selected' : '' }}>Kasir</option>
+                <option value="admin" {{ $pengguna->posisi == 'admin' ? 'selected' : '' }}>Admin</option>
+                <option value="kasir" {{ $pengguna->posisi == 'kasir' ? 'selected' : '' }}>Kasir</option>
             </select>
         </div>
 

@@ -1,33 +1,31 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Exports\TransactionExport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Transaction;
+use App\Models\TransactionDetail;
 
 class Laporancontroller extends Controller
 {
     public function index(Request $request)
     {
-        // Filter laporan berdasarkan tanggal
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        $transactions = Transaction::with('product')
-            ->when($startDate, function ($query) use ($startDate) {
-                $query->whereDate('created_at', '>=', $startDate);
-            })
-            ->when($endDate, function ($query) use ($endDate) {
-                $query->whereDate('created_at', '<=', $endDate);
+        $startDate = $request->get('start_date', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end_date', now()->endOfMonth()->format('Y-m-d'));
+    
+        $details = TransactionDetail::with(['transaction', 'product'])
+            ->whereHas('transaction', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
             })
             ->get();
-
-        $totalIncome = $transactions->sum('total_price');
-
-        return view('pages.laporan.index', compact('transactions', 'totalIncome', 'startDate', 'endDate'));
+    
+        $totalIncome = $details->sum(function ($detail) {
+            return $detail->quantity * ($detail->product->harga ?? 0);
+        });
+    
+        return view('pages.laporan.index', compact('details', 'startDate', 'endDate', 'totalIncome'));
     }
+    
 
     public function export(Request $request)
     {
