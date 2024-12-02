@@ -9,10 +9,11 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'quantity', 'total_price', 'status'];
+    protected $fillable = ['status'];
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
+    public function details()
+{
+    return $this->hasMany(TransactionDetail::class, 'transaction_id'); // Atau nama model detail transaksi
+}
+
 }

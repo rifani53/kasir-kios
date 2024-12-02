@@ -8,7 +8,7 @@
         <div class="small-box bg-info">
             <div class="inner">
                 <h3>1,726</h3>
-                <p>Total Barang Yang Ada</p>
+                <p>Total Barang </p>
             </div>
             <div class="icon">
                 <i class="fas fa-shopping-bag"></i>
@@ -70,36 +70,23 @@
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-warning">
-                Barang Expired
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Barang</th>
-                            <th>Expired</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>FRESTEA UHT</td>
-                            <td>30/11/2018</td>
-                        </tr>
-                        <tr>
-                            <td>ABC ALKALINE AA</td>
-                            <td>01/11/2017</td>
-                        </tr>
-                        <tr>
-                            <td>ABC ALKALINE 9 VOLT</td>
-                            <td>31/01/2018</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Produk</th>
+                <th>Jumlah Terjual</th>
+                <th>Jumlah Transaksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($products as $product)
+            <tr>
+                <td>{{ $product->nama }}</td>
+                <td>{{ $product->total_sold }}</td>
+                <td>{{ $product->sales_count }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection

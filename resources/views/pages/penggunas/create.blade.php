@@ -33,6 +33,17 @@
             <label for="password_confirmation">Konfirmasi Kata Sandi</label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
         </div>
+        <div class="form-group">
+            <label for="posisi">Posisi</label>
+            <select name="posisi" class="form-control @error('posisi') is-invalid @enderror" required>
+                <option value="admin" {{ old('posisi') == 'admin' ? 'selected' : '' }}>Admin</option>
+                <option value="kasir" {{ old('posisi') == 'kasir' ? 'selected' : '' }}>Kasir</option>
+            </select>
+            @error('posisi')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
         <button type="submit" class="btn btn-primary">Simpan Pengguna</button>
         <a href="{{ route('pages.penggunas.index') }}" class="btn btn-secondary">Kembali</a>
     </form>

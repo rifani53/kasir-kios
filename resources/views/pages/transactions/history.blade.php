@@ -4,6 +4,18 @@
 <div class="container mt-4">
     <h1>Riwayat Transaksi</h1>
 
+    <!-- Form Pencarian -->
+    <form method="GET" action="{{ route('pages.transactions.history') }}" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari produk atau kategori...">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Cari</button>
+            </div>
+        </div>
+    </form>
+
     @if($transactions->isEmpty())
         <p>Tidak ada transaksi dalam riwayat.</p>
     @else
@@ -24,11 +36,11 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $transaction->product->nama }}</td>
                     <td>{{ $transaction->quantity }}</td>
-                    <td>Rp {{ number_format($transaction->total_price, 2) }}</td>
+                    <td>Rp {{ number_format($transaction->subtotal, 2) }}</td>
                     <td>
                         <span class="badge
-                            {{ $transaction->status === 'completed' ? 'bg-success' : ($transaction->status === 'cancelled' ? 'bg-danger' : 'bg-warning') }}">
-                            {{ ucfirst($transaction->status) }}
+                            {{ $transaction->transaction->status === 'completed' ? 'bg-success' : ($transaction->transaction->status === 'cancelled' ? 'bg-danger' : 'bg-warning') }}">
+                            {{ ucfirst($transaction->transaction->status) }}
                         </span>
                     </td>
                     <td>{{ $transaction->created_at->format('d-m-Y H:i:s') }}</td>
