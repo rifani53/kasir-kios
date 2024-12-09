@@ -1,20 +1,20 @@
 <?php
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Laporancontroller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PenggunaController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Admin\MasterProductController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
 
 
 // Rute Login dan Logout
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('auths.login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Rute Registrasi
@@ -31,6 +31,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('pages.laporan.index');
     Route::post('/laporan/export', [LaporanController::class, 'export'])->name('pages.laporan.export');
+    Route::get('/dropbox/dropbox-files', [LaporanController::class, 'showDropboxFiles'])->name('pages.dropbox.dropbox_files');
+    Route::get('/dropbox/dropbox-files/download/{fileName}', [LaporanController::class, 'downloadDropboxFile'])->name('pages.dropbox.download');
+    Route::get('/dropbox/temporary-link/{filePath}', [LaporanController::class, 'getTemporaryLink'])->name('pages.dropbox.temporary-link');
+    Route::delete('/dropbox/delete/{fileName}', [LaporanController::class, 'deleteDropboxFile'])->name('pages.dropbox.delete');
+
     // Master Products
     Route::get('/master-products', [MasterProductController::class, 'index'])->name('pages.master_products.index');
     Route::get('/master-products/create', [MasterProductController::class, 'create'])->name('pages.master_products.create');
@@ -71,17 +76,26 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('pages.products.update');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('pages.products.destroy');
 });
+// Rute untuk Admi
+
 
 // Rute untuk Admin dan Kasir
 Route::middleware(['auth', 'role:admin,kasir'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('pages.dashboard.index');
 });
 
 // Rute untuk Kasir
 Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
-    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
-    Route::delete('/transactions/{id}', [TransactionController::class, 'cancel'])->name('transactions.cancel');
-    Route::post('/transactions/{id}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
-    Route::get('/transactions/{id}/print', [TransactionController::class, 'printReceipt'])->name('transactions.print');
+
+    Route::get('/history', [TransactionController::class, 'history'])->name('pages.transactions.history');
+    Route::post('/cart/add', [TransactionController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart', [TransactionController::class, 'showCart'])->name('cart.show');
+    Route::delete('/cart/remove/{productId}', [TransactionController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/complete', [TransactionController::class, 'completeCart'])->name('cart.complete');
+    Route::post('/cart/cancel', [TransactionController::class, 'cancelCart'])->name('cart.cancel');
+    Route::get('transactions/success/{transactionId}', [TransactionController::class, 'success'])->name('pages.transactions.success');
+    Route::get('transactions/download-receipt/{transactionId}', [TransactionController::class, 'downloadReceipt'])->name('transactions.downloadReceipt');
 });
+// Rute untuk Kasir
+

@@ -2,9 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\Transaction;
+use App\Models\TransactionDetail;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Carbon\Carbon;
 
 class TransactionExport implements FromCollection
 {
@@ -13,34 +13,30 @@ class TransactionExport implements FromCollection
 
     public function __construct($startDate, $endDate)
     {
-        // Parse tanggal untuk memastikan format yang benar
-        $this->startDate = Carbon::parse($startDate)->startOfDay();
-        $this->endDate = Carbon::parse($endDate)->endOfDay();
-
-     
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     public function collection()
     {
-        // Ambil data transaksi dengan relasi produk
-        $transactions = Transaction::with('product')
+        // Query data transaksi
+        $transactions = TransactionDetail::with('product')
             ->whereBetween('created_at', [$this->startDate, $this->endDate])
-            ->get();
-        // Mapping data transaksi untuk diexport
-        $mappedTransactions = $transactions->map(function ($transaction) {
-            return [
-                'Tanggal' => $transaction->created_at->format('d-m-Y'),
-                'Produk' => $transaction->product->nama ?? 'Tidak Ada', // Menangani jika tidak ada produk
-                'Jumlah' => $transaction->quantity,
-                'Total Harga' => $transaction->total_price,
-                'Status' => ucfirst($transaction->status),
-            ];
-        });
+            ->get()
+            ->map(function ($transaction) {
+                return [
+                    'Tanggal' => $transaction->created_at->format('d-m-Y'),
+                    'Produk' => $transaction->product->nama ?? 'Tidak Ada',
+                    'Jumlah' => $transaction->quantity,
+                    'Total Harga' => $transaction->total_price,
+                    'Status' => ucfirst($transaction->status ?? ''),
+                ];
+            });
+
+        // Tambahkan header ke data
+        $header = collect([['Tanggal', 'Produk', 'Jumlah', 'Total Harga', 'Status']]);
 
         // Gabungkan header dan data transaksi
-        $header = [['Tanggal', 'Produk', 'Jumlah', 'Total Harga', 'Status']];
-        $data = $mappedTransactions->toArray();
-
-        return collect(array_merge($header, $data)); // Menggabungkan header dan data transaksi
+        return $header->merge($transactions);
     }
 }

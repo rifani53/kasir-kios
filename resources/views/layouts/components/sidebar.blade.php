@@ -18,8 +18,6 @@
   <img src="{{ asset($logoPath) }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
   <span class="brand-text font-weight-light">{{ $brandText }}</span>
 </a>
-
-
   <!-- Sidebar -->
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
@@ -48,9 +46,22 @@
     if (auth()->user()->posisi === "kasir") {
         $menus[] = (object)[
             "title" => "Transaksi",
-            "path" => route('pages.transactions.index'),
+            "path" => "#",
             "icon" => "fas fa-exchange-alt",
-        ];
+            "submenu" => [
+                (object)[
+                "title" => "Transaksi",
+                "path" => route('pages.transactions.index'),
+            ],
+            (object)[
+                "title" => "History Transaksi",
+                "path" => route('pages.transactions.history'),
+            ],
+        ],
+    ];
+
+
+
     }
 
     // Tambahkan menu khusus admin
@@ -93,6 +104,12 @@
         "path" => route('pages.laporan.index'), // Rute menuju halaman laporan
         "icon" => "fas fa-chart-bar",
     ];
+
+    $menus[] = (object)[
+        "title" => "Dropbox",
+        "path" => route('pages.dropbox.dropbox_files'), // Rute menuju halaman dropbox
+        "icon" => "fas fa-box",
+    ];
 }
 
 @endphp
@@ -109,6 +126,7 @@
                 @endif
               </p>
             </a>
+
 
             @if (isset($menu->submenu))
               <ul class="nav nav-treeview" id="{{ $menu->title }}" style="{{ collect($menu->submenu)->contains(fn($submenu) => request()->is(ltrim($submenu->path, '/'))) ? 'display: block;' : 'display: none;' }}">
@@ -156,6 +174,6 @@ function toggleSubMenu(event, menuTitle, element) {
 }
 
 .rotate {
-    transform: rotate(90deg); /* Rotasi panah 90 derajat */
+    transform: rotate(-90deg); /* Rotasi panah 90 derajat */
 }
 </style>

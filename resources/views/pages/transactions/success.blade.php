@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Struk Transaksi</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
-        h1, h3 { text-align: center; }
-        p { margin: 5px 0; }
-    </style>
-</head>
-<body>
-    <h1>Struk Transaksi</h1>
+@extends('layouts.main')
+
+@section('content')
+<div class="container mt-4">
+    <h1>Transaksi Sukses</h1>
+
     <p><strong>ID Transaksi:</strong> {{ $transaction->id }}</p>
     <p><strong>Tanggal:</strong> {{ $transaction->created_at->format('d-m-Y H:i') }}</p>
 
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>#</th>
@@ -48,5 +40,12 @@
     <h3>Total Harga: Rp {{ number_format($totalHarga, 0, ',', '.') }}</h3>
 
     <p>Terima kasih telah berbelanja!</p>
-</body>
-</html>
+
+    <!-- Tombol untuk Print dan Download PDF -->
+    <div class="print-btn">
+        <button onclick="window.print()" class="btn btn-primary">Print Struk</button>
+        <a href="{{ route('transactions.downloadReceipt', $transaction->id) }}" class="btn btn-success">Download PDF</a>
+        <a href="{{ route('pages.transactions.index') }}" class="btn btn-secondary">Kembali</a>
+    </div>
+</div>
+@endsection
