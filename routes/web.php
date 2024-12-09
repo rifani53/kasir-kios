@@ -1,4 +1,5 @@
 <?php
+ use App\Http\Controllers\Perinkingancontroller;
 use App\Http\Controllers\Laporancontroller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
@@ -28,6 +29,11 @@ Route::get('/', function () {
 
 // Rute untuk Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
+   
+    Route::get('/products/initial', [Perinkingancontroller::class, 'showInitialData'])->name('pages.top_products.initial');
+    Route::get('/products/normalized', [Perinkingancontroller::class, 'showNormalizedData'])->name('pages.top_products.normalized');
+    Route::get('/products/final', [Perinkingancontroller::class, 'showFinalScores'])->name('pages.top_products.final');
+    
     // laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('pages.laporan.index');
     Route::post('/laporan/export', [LaporanController::class, 'export'])->name('pages.laporan.export');

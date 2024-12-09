@@ -26,7 +26,6 @@
                     <th>Produk</th>
                     <th>Jumlah</th>
                     <th>Total Harga</th>
-                    <th>Status</th>
                     <th>Tanggal</th>
                 </tr>
             </thead>
@@ -37,12 +36,6 @@
                     <td>{{ $transaction->product->nama }}</td>
                     <td>{{ $transaction->quantity }}</td>
                     <td>Rp {{ number_format($transaction->subtotal, 2) }}</td>
-                    <td>
-                        <span class="badge
-                            {{ $transaction->transaction->status === 'completed' ? 'bg-success' : ($transaction->transaction->status === 'cancelled' ? 'bg-danger' : 'bg-warning') }}">
-                            {{ ucfirst($transaction->transaction->status) }}
-                        </span>
-                    </td>
                     <td>{{ $transaction->created_at->format('d-m-Y H:i:s') }}</td>
                 </tr>
                 @endforeach

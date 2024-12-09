@@ -1,24 +1,23 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-<a href="{{ url('/') }}" class="brand-link">
-  @php
-    $userPosisi = auth()->user()->posisi; // Ambil posisi user yang login
-    $logoPath = 'tamplates/dist/img/AdminLTELogo.png'; // Default logo
-    $brandText = 'Admin'; // Default brand text
+  <a href="{{ url('/') }}" class="brand-link">
+    @php
+      $userPosisi = auth()->user()->posisi; // Ambil posisi user yang login
+      $logoPath = 'https://icons8.com/icon/23441/administrator-male'; // Default logo
+      $brandText = 'Admin'; // Default brand text
 
-    if ($userPosisi === 'admin') {
-      $logoPath = 'tamplates/dist/img/AdminLogo.png'; // Logo untuk admin
-      $brandText = 'Administrator';
-    } elseif ($userPosisi === 'kasir') {
-      $logoPath = 'tamplates/dist/img/KasirLogo.png'; // Logo untuk kasir
-      $brandText = 'Kasir';
-    }
-  @endphp
+      if ($userPosisi === 'admin') {
+        $logoPath = 'https://img.icons8.com/?size=100&id=23441&format=png&color=000000'; // Logo untuk admin
+        $brandText = 'Administrator';
+      } elseif ($userPosisi === 'kasir') {
+        $logoPath = 'https://img.icons8.com/?size=100&id=13042&format=png&color=000000'; // Logo untuk kasir
+        $brandText = 'Kasir';
+      }
+    @endphp
 
-  <img src="{{ asset($logoPath) }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-  <span class="brand-text font-weight-light">{{ $brandText }}</span>
-</a>
-
+    <img src="{{ asset($logoPath) }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <span class="brand-text font-weight-light">{{ $brandText }}</span>
+  </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -35,77 +34,82 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       @php
-    // Menu default untuk semua pengguna
-    $menus = [
-        (object)[
-            "title" => "Dashboard",
-            "path" => "dashboard",
-            "icon" => "fas fa-th",
-        ],
-    ];
+      // Menu default untuk semua pengguna
+      $menus = [
+          (object)[
+              "title" => "Dashboard",
+              "path" => route('pages.dashboard.index'), // Link ke Dashboard
+              "icon" => "fas fa-th",
+          ],
+      ];
 
-    // Tambahkan menu khusus kasir
-    if (auth()->user()->posisi === "kasir") {
+      // Menambahkan menu khusus untuk kasir
+      if (auth()->user()->posisi === "kasir") {
+          $menus[] = (object)[
+              "title" => "Transaksi",
+              "path" => "#",
+              "icon" => "fas fa-exchange-alt",
+              "submenu" => [
+                  (object)[
+                      "title" => "Penjualan",
+                      "path" => route('pages.transactions.index'),
+                  ],
+                  (object)[
+                      "title" => "History",
+                      "path" => route('pages.transactions.history'),
+                  ]
+              ]
+          ];
+      }
+
+      // Menambahkan menu khusus untuk admin
+      if (auth()->user()->posisi === "admin") {
         $menus[] = (object)[
-            "title" => "Transaksi",
-            "path" => "#",
-            "icon" => "fas fa-exchange-alt",
-            "submenu" => [
-                (object)[
-                    "title" => "Penjualan",
-                    "path" => route('pages.transactions.index'),
-                ],
-                (object)[
-                    "title" => "History",
-                    "path" => route('pages.transactions.history'),
-                ]
-            ]
-        ];
-    }
+          "title" => "Produk Terlaris",
+          "path" => route('pages.top_products.initial'), // Atur ke rute utama, misalnya "Data Awal"
+          "icon" => "fas fa-chart-line",
+];
 
-    // Tambahkan menu khusus admin
-    if (auth()->user()->posisi === "admin") {
-    $menus[] = (object)[
-        "title" => "Produk",
-        "path" => "#",
-        "icon" => "fas fa-box",
-        "submenu" => [
-            (object)[
-                "title" => "Kelola Produk",
-                "path" => route('pages.products.index'),
-            ],
-            (object)[
-                "title" => "Kelola Satuan",
-                "path" => route('pages.units.index'),
-            ],
-            (object)[
-                "title" => "Master Produk",
-                "path" => route('pages.master_products.index'),
-            ],
-        ],
-    ];
+          $menus[] = (object)[
+              "title" => "Produk",
+              "path" => "#",
+              "icon" => "fas fa-box",
+              "submenu" => [
+                  (object)[
+                      "title" => "Kelola Produk",
+                      "path" => route('pages.products.index'),
+                  ],
+                  (object)[
+                      "title" => "Kelola Satuan",
+                      "path" => route('pages.units.index'),
+                  ],
+                  (object)[
+                      "title" => "Master Produk",
+                      "path" => route('pages.master_products.index'),
+                  ],
+              ]
+          ];
 
-    $menus[] = (object)[
-        "title" => "Kategori",
-        "path" => "categories",
-        "icon" => "fas fa-tags",
-    ];
+          $menus[] = (object)[
+              "title" => "Kategori",
+              "path" => route('pages.categories.index'),
+              "icon" => "fas fa-tags",
+          ];
 
-    $menus[] = (object)[
-        "title" => "Pengguna",
-        "path" => "penggunas",
-        "icon" => "fas fa-users",
-    ];
+          $menus[] = (object)[
+              "title" => "Pengguna",
+              "path" => route('pages.penggunas.index'),
+              "icon" => "fas fa-users",
+          ];
 
-    // Tambahkan menu Laporan
-    $menus[] = (object)[
-        "title" => "Laporan",
-        "path" => route('pages.laporan.index'), // Rute menuju halaman laporan
-        "icon" => "fas fa-chart-bar",
-    ];
-}
-
-@endphp
+          // Menu Laporan
+          $menus[] = (object)[
+              "title" => "Laporan",
+              "path" => route('pages.laporan.index'),
+              "icon" => "fas fa-chart-bar",
+          ];
+      }
+      @endphp
 
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
         @foreach ($menus as $menu)
@@ -136,9 +140,7 @@
         @endforeach
       </ul>
     </nav>
-    <!-- /.sidebar-menu -->
   </div>
-  <!-- /.sidebar -->
 </aside>
 
 <script>

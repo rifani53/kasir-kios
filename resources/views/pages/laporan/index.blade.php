@@ -8,19 +8,19 @@
     <form method="GET" action="{{ route('pages.laporan.index') }}" class="mb-4">
         <div class="row">
             <div class="col-md-4">
-                <label for="start_date">Tanggal Mulai:</label>
-                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $startDate }}">
+                <label for="start_date">Tanggal Mulai</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request('start_date', $startDate) }}">
             </div>
             <div class="col-md-4">
-                <label for="end_date">Tanggal Selesai:</label>
-                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $endDate }}">
+                <label for="end_date">Tanggal Akhir</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request('end_date', $endDate) }}">
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary">Filter</button>
             </div>
         </div>
     </form>
-
+    
     <!-- Data Transaksi -->
     <h2>Data Transaksi</h2>
     @if($details->isEmpty())
@@ -34,18 +34,18 @@
                     <th>Jumlah</th>
                     <th>Harga Satuan</th>
                     <th>Total Harga</th>
-                    <th>Status</th>
+                  
                 </tr>
             </thead>
             <tbody>
                 @foreach($details as $detail)
                 <tr>
-                    <td>{{ $detail->transaction->created_at->format('d-m-Y') }}</td>
-                    <td>{{ $detail->product->nama }}</td>
+                    <td>{{ $detail->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $detail->product->nama ?? '-' }}</td>
                     <td>{{ $detail->quantity }}</td>
                     <td>Rp {{ number_format($detail->product->harga ?? 0, 2, ',', '.') }}</td>
-                    <td>Rp {{ number_format($detail->quantity * $detail->product->harga, 2, ',', '.') }}</td>
-                    <td>{{ ucfirst($detail->transaction->status) }}</td>
+                    <td>Rp {{ number_format($detail->quantity * ($detail->product->harga ?? 0), 2, ',', '.') }}</td>
+                    
                 </tr>
                 @endforeach
             </tbody>
