@@ -62,31 +62,11 @@
         <div class="card">
             <div class="card-header">
                 Grafik Transaksi Tahun 2019
-
             </div>
             <div class="card-body">
                 <canvas id="transactionChart"></canvas>
             </div>
         </div>
     </div>
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Produk</th>
-                <th>Jumlah Terjual</th>
-                <th>Jumlah Transaksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($products as $product)
-            <tr>
-                <td>{{ $product->nama }}</td>
-                <td>{{ $product->total_sold }}</td>
-                <td>{{ $product->sales_count }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
 </div>
 @endsection

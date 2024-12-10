@@ -65,7 +65,7 @@
       // Menambahkan menu khusus untuk admin
       if (auth()->user()->posisi === "admin") {
         $menus[] = (object)[
-          "title" => "Produk Terlaris",
+          "title" => "Produk Terbaik",
           "path" => route('pages.top_products.initial'), // Atur ke rute utama, misalnya "Data Awal"
           "icon" => "fas fa-chart-line",
 ];
@@ -108,7 +108,12 @@
               "path" => route('pages.laporan.index'),
               "icon" => "fas fa-chart-bar",
           ];
-      }
+          $menus[] = (object)[
+        "title" => "Dropbox",
+        "path" => route('pages.dropbox.dropbox_files'), // Rute menuju halaman dropbox
+        "icon" => "fas fa-box",
+      ];
+    }
       @endphp
 
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">

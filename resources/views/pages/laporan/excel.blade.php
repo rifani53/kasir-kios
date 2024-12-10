@@ -13,19 +13,19 @@
                 <th>Tanggal</th>
                 <th>Produk</th>
                 <th>Jumlah</th>
+                <th>harga satuan</th>
                 <th>Total Harga</th>
-                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($transactions as $transaction)
-                <tr>
-                    <td>{{ $transaction->created_at->format('d-m-Y') }}</td>
-                    <td>{{ $transaction->product->nama }}</td>
-                    <td>{{ $transaction->quantity }}</td>
-                    <td>Rp {{ number_format($transaction->total_price, 2) }}</td>
-                    <td>{{ ucfirst($transaction->status) }}</td>
-                </tr>
+            @foreach($details as $detail)
+            <tr>
+                <td>{{ $detail->created_at->format('d-m-Y') }}</td>
+                <td>{{ $detail->product->nama ?? '-' }}</td>
+                <td>{{ $detail->quantity }}</td>
+                <td>Rp {{ number_format($detail->product->harga ?? 0, 2, ',', '.') }}</td>
+                <td>Rp {{ number_format($detail->quantity * ($detail->product->harga ?? 0), 2, ',', '.') }}</td>
+            </tr>
                 @endforeach
         </tbody>
     </table>

@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\MasterProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
+
 
 
 // Rute Login dan Logout
@@ -38,6 +38,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('pages.laporan.index');
     Route::post('/laporan/export', [LaporanController::class, 'export'])->name('pages.laporan.export');
+    Route::get('/dropbox/dropbox-files', [LaporanController::class, 'showDropboxFiles'])->name('pages.dropbox.dropbox_files');
+    Route::get('/dropbox/dropbox-files/download/{fileName}', [LaporanController::class, 'downloadDropboxFile'])->name('pages.dropbox.download');
+    Route::get('/dropbox/temporary-link/{filePath}', [LaporanController::class, 'getTemporaryLink'])->name('pages.dropbox.temporary-link');
+    Route::delete('/dropbox/delete/{fileName}', [LaporanController::class, 'deleteDropboxFile'])->name('pages.dropbox.delete');
     // Master Products
     Route::get('/master-products', [MasterProductController::class, 'index'])->name('pages.master_products.index');
     Route::get('/master-products/create', [MasterProductController::class, 'create'])->name('pages.master_products.create');

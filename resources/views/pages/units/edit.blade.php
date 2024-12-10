@@ -6,7 +6,7 @@
         <h1>Edit Satuan</h1>
     </div>
     <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
+        <ol class="breadc   rumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('pages.units.index') }}">Satuan</a></li>
             <li class="breadcrumb-item active">Edit Satuan</li>
         </ol>
