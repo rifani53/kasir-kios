@@ -169,5 +169,6 @@ function toggleSubMenu(event, menuTitle, element) {
 
 .rotate {
     transform: rotate(-90deg); /* Rotasi panah 90 derajat */
+    transform: rotate(-90deg); /* Rotasi panah 90 derajat */
 }
 </style>

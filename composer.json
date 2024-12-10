@@ -8,9 +8,13 @@
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
         "dompdf/dompdf": "^3.0",
-        "laravel/framework": "^11.9",
+        "guzzlehttp/guzzle": "^7.9",
+        "guzzlehttp/psr7": "^2.7",
+        "laravel/framework": "11.30.0",
         "laravel/tinker": "^2.9",
-        "maatwebsite/excel": "^1.1"
+        "league/flysystem": "^3.29",
+        "maatwebsite/excel": "^3.1",
+        "spatie/dropbox-api": "^1.22"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

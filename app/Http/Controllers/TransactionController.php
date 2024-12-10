@@ -9,13 +9,23 @@ use Illuminate\Http\Request;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use App\Models\TransactionDetail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use PDF; // Pastikan Anda telah menginstal barryvdh/laravel-dompdf
 
 class TransactionController extends Controller
 {
 
+
     // Menampilkan halaman transaksi dengan produk dan filter kategori
     public function index(Request $request)
+{
+    $search = $request->get('search');
+    $selectedCategoryId = $request->get('category');
+
+    // Ambil kategori
+    $categories = Category::orderBy('name')->pluck('name', 'id');
 {
     $search = $request->get('search');
     $selectedCategoryId = $request->get('category');
@@ -51,10 +61,71 @@ class TransactionController extends Controller
             $query->where('status', 'pending');
         })
         ->get();
+    // Ambil produk sesuai filter
+    $products = Product::query()
+        ->when($selectedCategoryId, function ($query) use ($selectedCategoryId) {
+            $query->where('category_id', $selectedCategoryId);
+        })
+        ->when($search, function ($query) use ($search) {
+            $query->where('nama', 'like', '%' . $search . '%')
+                  ->orWhereHas('category', function ($query) use ($search) {
+                      $query->where('name', 'like', '%' . $search . '%');
+                  });
+        })
+        ->with('category')
+        ->get();
+
+    // Ambil transaksi yang pending dari TransactionDetail
+    $transactions = TransactionDetail::with('product.category')
+        ->when($search, function ($query) use ($search) {
+            $query->whereHas('product', function ($query) use ($search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                      ->orWhereHas('category', function ($query) use ($search) {
+                          $query->where('name', 'like', '%' . $search . '%');
+                      });
+            });
+        })
+        ->whereHas('transaction', function ($query) {
+            $query->where('status', 'pending');
+        })
+        ->get();
 
     // Hitung total harga dari TransactionDetail
     $totalAmount = $transactions->sum('total_price');
+    // Hitung total harga dari TransactionDetail
+    $totalAmount = $transactions->sum('total_price');
 
+    return view('pages.transactions.index', compact(
+        'products',
+        'categories',
+        'selectedCategoryId',
+        'transactions',
+        'totalAmount'
+    ));
+}
+
+public function history(Request $request)
+{
+    // Ambil pencarian dan filter dari request
+    $search = $request->get('search');
+
+    // Ambil transaksi yang selesai atau dibatalkan berdasarkan status
+    $transactions = TransactionDetail::with('product.category', 'transaction')
+        ->when($search, function ($query) use ($search) {
+            $query->whereHas('product', function ($query) use ($search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                      ->orWhereHas('category', function ($query) use ($search) {
+                          $query->where('name', 'like', '%' . $search . '%');
+                      });
+            });
+        })
+        ->whereHas('transaction', function ($query) {
+            $query->whereIn('status', ['completed', 'cancelled']);
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+    return view('pages.transactions.history', compact('transactions'));
+}
     return view('pages.transactions.index', compact(
         'products',
         'categories',
@@ -162,6 +233,8 @@ public function history(Request $request)
 
     // Ambil transaksi yang statusnya pending
     $transaction = Transaction::where('status', 'pending')->first();
+    // Ambil transaksi yang statusnya pending
+    $transaction = Transaction::where('status', 'pending')->first();
 
     if (!$transaction) {
         return redirect()->back()->with('error', 'Tidak ada transaksi pending.');
@@ -232,10 +305,34 @@ public function history(Request $request)
 public function downloadReceipt($transactionId)
 {
     $transaction = Transaction::with('details.product.category')->findOrFail($transactionId);
+    public function printReceipt()
+{
+    $successTransaction = session()->get('success_transaction');
+
+    if (!$successTransaction) {
+        return redirect()->route('pages.transactions.index')->with('error', 'Tidak ada transaksi untuk dicetak.');
+    }
+
+    $pdf = PDF::loadView('pages.transactions.receipt', [
+        'transactions' => $successTransaction['transactions'],
+        'totalPrice' => $successTransaction['totalPrice'],
+        'transactionDate' => $successTransaction['transactionDate'],
+    ]);
+
+    return $pdf->stream('struk_transaksi_' . now()->format('Ymd_His') . '.pdf');
+}
+public function downloadReceipt($transactionId)
+{
+    $transaction = Transaction::with('details.product.category')->findOrFail($transactionId);
 
     // Membuat PDF dari view
     $pdf = PDF::loadView('pages.transactions.receipt', compact('transaction'));
+    // Membuat PDF dari view
+    $pdf = PDF::loadView('pages.transactions.receipt', compact('transaction'));
 
+    // Download PDF
+    return $pdf->download('struk-transaksi-' . $transaction->id . '.pdf');
+}
     // Download PDF
     return $pdf->download('struk-transaksi-' . $transaction->id . '.pdf');
 }

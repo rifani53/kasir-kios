@@ -3,10 +3,11 @@
 use App\Http\Controllers\Laporancontroller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PenggunaController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Admin\MasterProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
@@ -45,6 +46,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/master-products/{id}', [MasterProductController::class, 'update'])->name('master_products.update');
     Route::delete('/master-products/{id}', [MasterProductController::class, 'destroy'])->name('master_products.destroy');
 
+    // Units
+    Route::get('/units', [UnitController::class, 'index'])->name('pages.units.index');
+    Route::get('/units/create', [UnitController::class, 'create'])->name('pages.units.create');
+    Route::post('/units', [UnitController::class, 'store'])->name('pages.units.store');
+    Route::get('/units/{unit}/edit', [UnitController::class, 'edit'])->name('pages.units.edit');
+    Route::put('/units/{unit}', [UnitController::class, 'update'])->name('pages.units.update');
+    Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->name('pages.units.destroy');
+
+    // Pengguna
+    Route::get('/penggunas', [PenggunaController::class, 'index'])->name('pages.penggunas.index');
+    Route::get('/penggunas/create', [PenggunaController::class, 'create'])->name('pages.penggunas.create');
+    Route::post('/penggunas', [PenggunaController::class, 'store'])->name('pages.penggunas.store');
+    Route::get('/penggunas/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pages.penggunas.edit');
+    Route::put('/penggunas/{id}', [PenggunaController::class, 'update'])->name('pages.penggunas.update');
+    Route::delete('/penggunas/{id}', [PenggunaController::class, 'destroy'])->name('pages.penggunas.destroy');
     // Units
     Route::get('/units', [UnitController::class, 'index'])->name('pages.units.index');
     Route::get('/units/create', [UnitController::class, 'create'])->name('pages.units.create');
