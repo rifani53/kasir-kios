@@ -3,10 +3,16 @@
 @section('content')
 <div class="container">
     <h1>Laporan Transaksi</h1>
-
+    <form method="POST" action="{{ route('pages.laporan.export') }}">
+        @csrf
+        <input type="hidden" name="start_date" value="{{ $startDate }}">
+        <input type="hidden" name="end_date" value="{{ $endDate }}">
+        <button type="submit" class="btn btn-success">Export Laporan</button>
+    </form>
+    
     <!-- Filter Laporan -->
     <form method="GET" action="{{ route('pages.laporan.index') }}" class="mb-4">
-        <div class="row align-items-end">
+        <div class="row">
             <div class="col-md-4">
                 <label for="start_date">Tanggal Mulai:</label>
                 <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $startDate }}">
@@ -15,21 +21,12 @@
                 <label for="end_date">Tanggal Selesai:</label>
                 <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $endDate }}">
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
-            </div>
-            <div class="col-md-2">
-                <!-- Tombol Export -->
-                <form method="POST" action="{{ route('pages.laporan.export') }}">
-                    @csrf
-                    <input type="hidden" name="start_date" value="{{ $startDate }}">
-                    <input type="hidden" name="end_date" value="{{ $endDate }}">
-                    <button type="submit" class="btn btn-success w-100">Export Laporan</button>
-                </form>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
             </div>
         </div>
     </form>
-    
+
     <!-- Total Pemasukan -->
     <div class="row mb-3">
         <div class="col-md-8">
