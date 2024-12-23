@@ -57,7 +57,14 @@
             color: #333;
             text-align: center;
         }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .input-container {
+            width: 100%;
+            max-width: 400px; /* Batasi lebar input */
             margin-bottom: 20px;
         }
         .input-container input {
@@ -73,23 +80,37 @@
             border-color: #5A4FCF;
             outline: none;
         }
-        .login-button, button {
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px; /* Maksimal lebar tombol */
+        }
+        .login-button {
+            width: 100%;
+            padding: 12px 20px;
             background-color: #0000FF;
             color: white;
-            padding: 12px;
             border: none;
             border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .login-button:hover, button:hover {
+        .login-button:hover {
             background-color: #0056b3; /* Darker blue on hover */
         }
-        .toggle-link {
-            display: block;
-            margin-top: 15px;
+        .toggle-container {
+            margin-top: 10px;
             text-align: center;
+            font-size: 14px;
+        }
+        .toggle-container p {
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .toggle-link {
             color: #5A4FCF;
             text-decoration: none;
             transition: color 0.3s;
@@ -109,13 +130,14 @@
             @auth
                 <h2>Welcome Back!</h2>
                 <p>Congrats, you are logged in!</p>
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('logout') }}" method="POST" class="form-container">
                     @csrf
-                    <button type="submit" class="login-button">Logout</button>
+                    <div class="button-container">
+                        <button type="submit" class="login-button">Logout</button>
+                    </div>
                 </form>
             @else
-                <!-- Form Login -->
-                <div class="form-container" id="login" style="display: block;"> <!-- Set to block to show on load -->
+                <div class="form-container" id="login" style="display: block;"> <!-- Form Login -->
                     <h2>Login</h2>
                     <form action="{{ route('login') }}" method="POST">
                         @csrf
@@ -125,12 +147,15 @@
                         <div class="input-container">
                             <input type="password" name="loginpassword" placeholder="Password" required>
                         </div>
-                        <button type="submit" class="login-button">Login</button>
-                        <p>Don't have an account? <a href="#" class="toggle-link" onclick="showRegister()">Register</a></p>
+                        <div class="button-container">
+                            <button type="submit" class="login-button">Login</button>
+                        </div>
+                        <div class="toggle-container">
+                            <p>Don't have an account? <a href="#" class="toggle-link" onclick="showRegister()">Register</a></p>
+                        </div>
                     </form>
                 </div>
-                <!-- Form Register -->
-                <div class="form-container" id="register" style="display: none;">
+                <div class="form-container" id="register" style="display: none;"> <!-- Form Register -->
                     <h2>Register</h2>
                     <form action="{{ route('register') }}" method="POST">
                         @csrf
@@ -143,8 +168,12 @@
                         <div class="input-container">
                             <input type="password" name="password" placeholder="Password" required>
                         </div>
-                        <button type="submit" class="login-button">Register</button>
-                        <p>Already have an account? <a href="#" class="toggle-link" onclick="showLogin()">Login</a></p>
+                        <div class="button-container">
+                            <button type="submit" class="login-button">Register</button>
+                        </div>
+                        <div class="toggle-container">
+                            <p>Already have an account? <a href="#" class="toggle-link" onclick="showLogin()">Login</a></p>
+                        </div>
                     </form>
                 </div>
             @endauth
@@ -156,6 +185,7 @@
             document.getElementById('login').style.display = 'none';
             document.getElementById('register').style.display = 'block';
         }
+
         function showLogin() {
             document.getElementById('register').style.display = 'none';
             document.getElementById('login').style.display = 'block';

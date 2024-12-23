@@ -15,21 +15,21 @@
       }
     @endphp
 
-    <img src="{{ asset($logoPath) }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-    <span class="brand-text font-weight-light">{{ $brandText }}</span>
-  </a>
+      <img src="{{ asset($logoPath) }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">{{ $brandText }}</span>
+      </a>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <img src="{{ asset('tamplates/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+      <!-- Sidebar -->
+      <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ asset('tamplates/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">{{ auth()->user()->name }}</a>
+        </div>
       </div>
-      <div class="info">
-        <a href="#" class="d-block">{{ auth()->user()->name }}</a>
-      </div>
-    </div>
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
@@ -64,11 +64,25 @@
 
       // Menambahkan menu khusus untuk admin
       if (auth()->user()->posisi === "admin") {
-        $menus[] = (object)[
-          "title" => "Produk Terbaik",
-          "path" => route('pages.top_products.initial'), // Atur ke rute utama, misalnya "Data Awal"
-          "icon" => "fas fa-chart-line",
-];
+          $menus[] = (object)[
+              "title" => "Produk Terbaik",
+              "path" => "#",
+              "icon" => "fas fa-chart-line",
+              "submenu" => [
+                  (object)[
+                      "title" => "Data Awal",
+                      "path" => route('pages.top_products.initial'),
+                  ],
+                  (object)[
+                      "title" => "Perhitungan",
+                      "path" => route('pages.top_products.normalized'),
+                  ],
+                  (object)[
+                      "title" => "Hasil Akhir",
+                      "path" => route('pages.top_products.final'),
+                  ],
+              ],
+          ];
 
           $menus[] = (object)[
               "title" => "Produk",
@@ -87,7 +101,7 @@
                       "title" => "Master Produk",
                       "path" => route('pages.master_products.index'),
                   ],
-              ]
+              ],
           ];
 
           $menus[] = (object)[
@@ -108,12 +122,13 @@
               "path" => route('pages.laporan.index'),
               "icon" => "fas fa-chart-bar",
           ];
+
           $menus[] = (object)[
-        "title" => "Dropbox",
-        "path" => route('pages.dropbox.dropbox_files'), // Rute menuju halaman dropbox
-        "icon" => "fas fa-box",
-      ];
-    }
+              "title" => "Dropbox",
+              "path" => route('pages.dropbox.dropbox_files'),
+              "icon" => "fas fa-box",
+          ];
+      }
       @endphp
 
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
@@ -151,29 +166,22 @@
 <script>
 function toggleSubMenu(event, menuTitle, element) {
     const submenu = document.getElementById(menuTitle);
-    const arrow = element.querySelector('.arrow'); // Ambil elemen panah
+    const arrow = element.querySelector('.arrow');
 
     if (submenu) {
-        event.preventDefault(); // Mencegah navigasi default hanya jika ada submenu
-        // Toggle display style
-        if (submenu.style.display === "none" || submenu.style.display === "") {
-            submenu.style.display = "block"; // Tampilkan submenu
-            arrow.classList.add('rotate'); // Tambahkan kelas untuk rotasi
-        } else {
-            submenu.style.display = "none"; // Sembunyikan submenu
-            arrow.classList.remove('rotate'); // Hapus kelas untuk rotasi
-        }
+        event.preventDefault();
+        submenu.style.display = (submenu.style.display === "none" || submenu.style.display === "") ? "block" : "none";
+        arrow.classList.toggle('rotate');
     }
 }
 </script>
 
 <style>
 .arrow {
-    transition: transform 0.3s ease; /* Transisi untuk rotasi */
+    transition: transform 0.3s ease;
 }
 
 .rotate {
-    transform: rotate(-90deg); /* Rotasi panah 90 derajat */
-    transform: rotate(-90deg); /* Rotasi panah 90 derajat */
+    transform: rotate(90deg);
 }
 </style>

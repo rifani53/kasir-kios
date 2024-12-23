@@ -10,7 +10,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>#</th>
+                <th>No</th>
                 <th>Nama Produk</th>
                 <th>Kategori</th>
                 <th>Harga Satuan</th>

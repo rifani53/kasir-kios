@@ -4,19 +4,25 @@
 <div class="container">
     <div class="mt-1">
         <a href="{{ route('pages.top_products.initial') }}" class="btn btn-primary">Data Awal</a>
-        <a href="{{ route('pages.top_products.normalized') }}" class="btn btn-secondary">Data Normalisasi</a>
-        <a href="{{ route('pages.top_products.final') }}" class="btn btn-success">Skor Akhir</a>
-        <div class="mt-1 mb-3">
-            <a href="{{ route('pages.top_products.final', ['month' => $month - 1, 'year' => $year]) }}" class="btn btn-light">
-                &lt; Bulan Sebelumnya
-            </a>
-            <a href="{{ route('pages.top_products.final', ['month' => $month + 1, 'year' => $year]) }}" class="btn btn-light">
-                Bulan Berikutnya &gt;
-            </a>
-        </div>
+        <a href="{{ route('pages.top_products.normalized') }}" class="btn btn-secondary">Perhitungan</a>
+        <a href="{{ route('pages.top_products.final') }}" class="btn btn-success">Hasil Akhir</a>
+
+        <form method="GET" action="{{ route('pages.top_products.final') }}" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="start_date">Tanggal Mulai:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $startDate }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date">Tanggal Selesai:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $endDate }}">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
     
-        <!-- Header Halaman -->
-        <h2 class="text-center">Produk Terbaik - {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}</h2>
     
         <!-- Produk Terbaik -->
         @if ($topProduct)

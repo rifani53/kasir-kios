@@ -61,8 +61,16 @@
             color: #333;
             text-align: center;
         }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         .input-container {
             margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
         }
         .input-container input {
             width: 100%;
@@ -86,6 +94,8 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
+            width: 100%;
+            max-width: 400px; /* Maximum width for the button */
         }
         .login-button:hover {
             background-color: #0056b3;
@@ -100,6 +110,11 @@
         }
         .toggle-link:hover {
             color: #003d80;
+        }
+        .alert {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -119,7 +134,7 @@
                 </form>
             @else
                 <h2>Login</h2>
-                <form action="{{ route('auths.login') }}" method="POST">
+                <form action="{{ route('auths.login') }}" method="POST" class="form-container">
                     @csrf
                     <div class="input-container">
                         <input type="email" name="email" placeholder="Email" required>
@@ -128,11 +143,10 @@
                         <input type="password" name="password" placeholder="Password" required>
                     </div>
                     <button type="submit" class="login-button">Login</button>
-                </form>
                     <p>Don't have an account? <a href="{{ route('auths.index') }}" class="toggle-link">Register</a></p>
                 </form>
                 @if (session('error'))
-                    <div class="alert alert-danger mt-3">
+                    <div class="alert alert-danger">
                         {{ session('error') }}
                     </div>
                 @endif
