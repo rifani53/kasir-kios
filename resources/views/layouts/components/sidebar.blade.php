@@ -65,23 +65,9 @@
       // Menambahkan menu khusus untuk admin
       if (auth()->user()->posisi === "admin") {
           $menus[] = (object)[
-              "title" => "Produk Terbaik",
-              "path" => "#",
-              "icon" => "fas fa-chart-line",
-              "submenu" => [
-                  (object)[
-                      "title" => "Data Awal",
-                      "path" => route('pages.top_products.initial'),
-                  ],
-                  (object)[
-                      "title" => "Perhitungan",
-                      "path" => route('pages.top_products.normalized'),
-                  ],
-                  (object)[
-                      "title" => "Hasil Akhir",
-                      "path" => route('pages.top_products.final'),
-                  ],
-              ],
+              "title" => "Kategori",
+              "path" => route('pages.categories.index'),
+              "icon" => "fas fa-tags",
           ];
 
           $menus[] = (object)[
@@ -105,9 +91,23 @@
           ];
 
           $menus[] = (object)[
-              "title" => "Kategori",
-              "path" => route('pages.categories.index'),
-              "icon" => "fas fa-tags",
+              "title" => "Produk Terbaik",
+              "path" => "#",
+              "icon" => "fas fa-chart-line",
+              "submenu" => [
+                  (object)[
+                      "title" => "Data Awal",
+                      "path" => route('pages.top_products.initial'),
+                  ],
+                  (object)[
+                      "title" => "Perhitungan",
+                      "path" => route('pages.top_products.normalized'),
+                  ],
+                  (object)[
+                      "title" => "Hasil Akhir",
+                      "path" => route('pages.top_products.final'),
+                  ],
+              ],
           ];
 
           $menus[] = (object)[
