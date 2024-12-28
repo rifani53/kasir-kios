@@ -88,5 +88,93 @@
 <script src="{{ asset('/tamplates/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('/tamplates/dist/js/demo.js') }}"></script>
+
+
+<style>
+
+#suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#suggestions .list-group-item {
+    cursor: pointer;
+}
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        // Menangani input pada kolom pencarian
+        $('#search').on('input', function () {
+            const query = $(this).val();
+            const suggestions = $('#suggestions');
+
+            if (query.length > 0) {
+                $.ajax({
+                    url: "{{ route('transactions.search') }}",
+                    type: 'GET',
+                    data: { query: query },
+                    success: function (data) {
+                        let html = '';
+                        data.forEach(function (item) {
+                            html += `
+                                <li class="list-group-item d-flex justify-content-between align-items-center"
+                                    style="cursor: pointer;"
+                                    data-id="${item.id}"
+                                    data-nama="${item.nama}"
+                                    data-harga="${item.harga}">
+                                    ${item.nama} - Rp ${item.harga.toLocaleString('id-ID')}
+                                </li>
+                            `;
+                        });
+                        suggestions.html(html).show();
+                    },
+                });
+            } else {
+                suggestions.hide();
+            }
+        });
+
+        // Menangani klik pada hasil sugesti
+        $('#suggestions').on('click', 'li', function () {
+            const id = $(this).data('id');
+            const nama = $(this).data('nama');
+            const harga = $(this).data('harga');
+
+            // Misal: Tambahkan langsung ke keranjang
+            const quantity = 1;
+            $.ajax({
+                url: "{{ route('transactions.cart.add') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    product_id: id,
+                    quantity: quantity,
+                },
+                success: function (response) {
+                    alert('Produk berhasil ditambahkan ke keranjang.');
+                    location.reload(); // Reload halaman untuk memperbarui keranjang
+                },
+                error: function (xhr) {
+                    alert('Gagal menambahkan produk ke keranjang.');
+                }
+            });
+
+            // Sembunyikan suggestions
+            $('#suggestions').hide();
+        });
+
+        // Menyembunyikan sugesti jika klik di luar
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#search, #suggestions').length) {
+                $('#suggestions').hide();
+            }
+        });
+    });
+</script>
 </body>
 </html>

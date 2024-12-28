@@ -115,20 +115,22 @@
               "path" => route('pages.penggunas.index'),
               "icon" => "fas fa-users",
           ];
-
-          // Menu Laporan
           $menus[] = (object)[
-              "title" => "Laporan",
-              "path" => route('pages.laporan.index'),
-              "icon" => "fas fa-chart-bar",
+            "title" => "Laporan",
+            "path" => "#",
+            "icon" => "fas fa-box",
+            "submenu" => [
+                (object)[
+                    "title" => "Kelola Laporan",
+                    "path" => route('pages.laporan.index'),
+                ],
+                (object)[
+                    "title" => "Penyimpanan Laporan",
+                    "path" => route('pages.dropbox.dropbox_files'),
+                    ],
+                ]
           ];
-
-          $menus[] = (object)[
-              "title" => "Dropbox",
-              "path" => route('pages.dropbox.dropbox_files'),
-              "icon" => "fas fa-box",
-          ];
-      }
+    }
       @endphp
 
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">

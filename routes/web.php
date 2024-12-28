@@ -1,6 +1,6 @@
 <?php
  use App\Http\Controllers\Perinkingancontroller;
-use App\Http\Controllers\Laporancontroller;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Auth\LoginController;
@@ -30,11 +30,11 @@ Route::get('/', function () {
 
 // Rute untuk Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
-   
+
     Route::get('/products/initial', [Perinkingancontroller::class, 'showInitialData'])->name('pages.top_products.initial');
     Route::get('/products/normalized', [Perinkingancontroller::class, 'showNormalizedData'])->name('pages.top_products.normalized');
     Route::get('/products/final', [Perinkingancontroller::class, 'showFinalScores'])->name('pages.top_products.final');
-    
+
     // laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('pages.laporan.index');
     Route::post('/laporan/export', [LaporanController::class, 'export'])->name('pages.laporan.export');
@@ -107,11 +107,23 @@ Route::middleware(['auth', 'role:admin,kasir'])->group(function () {
 Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
     Route::get('/history', [TransactionController::class, 'history'])->name('pages.transactions.history');
-    Route::post('/cart/add', [TransactionController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart', [TransactionController::class, 'showCart'])->name('cart.show');
-    Route::delete('/cart/remove/{productId}', [TransactionController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/cart/complete', [TransactionController::class, 'completeCart'])->name('cart.complete');
-    Route::post('/cart/cancel', [TransactionController::class, 'cancelCart'])->name('cart.cancel');
+    // Route untuk halaman transaksi
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.transactions.index');
+
+    // Route untuk menambahkan produk ke keranjang
+    Route::post('/transactions/cart/add', [TransactionController::class, 'addToCart'])->name('transactions.cart.add');
+
+    // Route untuk menghapus produk dari keranjang
+    Route::delete('/transactions/cart/remove/{productId}', [TransactionController::class, 'removeFromCart'])->name('transactions.cart.remove');
+
+    // Route untuk menyelesaikan transaksi
+    Route::post('/transactions/cart/complete', [TransactionController::class, 'completeCart'])->name('transactions.cart.complete');
+
+    // Route untuk membatalkan keranjang
+    Route::post('/transactions/cart/cancel', [TransactionController::class, 'cancelCart'])->name('transactions.cart.cancel');
+
     Route::get('transactions/success/{transactionId}', [TransactionController::class, 'success'])->name('pages.transactions.success');
     Route::get('transactions/download-receipt/{transactionId}', [TransactionController::class, 'downloadReceipt'])->name('transactions.downloadReceipt');
+    Route::get('/transaksi/cari-produk', [TransactionController::class, 'searchProduct'])->name('transactions.search');
+    Route::post('/transactions/{id}/send-to-wa', [TransactionController::class, 'sendToWA'])->name('transactions.sendToWA');
 });

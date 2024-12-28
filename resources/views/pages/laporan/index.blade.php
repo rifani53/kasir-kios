@@ -2,8 +2,14 @@
 
 @section('content')
 <div class="container">
-    <h1 class="text-center mb-4">Laporan Transaksi</h1>
-
+    <h1>Laporan Transaksi</h1>
+    <form method="POST" action="{{ route('pages.laporan.export') }}">
+        @csrf
+        <input type="hidden" name="start_date" value="{{ $startDate }}">
+        <input type="hidden" name="end_date" value="{{ $endDate }}">
+        <button type="submit" class="btn btn-success">Export Laporan</button>
+    </form>
+    
     <!-- Filter Laporan -->
     <form method="GET" action="{{ route('pages.laporan.index') }}" class="mb-4">
         <div class="row">
@@ -16,7 +22,7 @@
                 <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $endDate }}">
             </div>
             <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </div>
         </div>
     </form>
