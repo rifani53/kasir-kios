@@ -118,7 +118,7 @@ class ProductController extends Controller
     // Menampilkan daftar produk
     public function index()
     {
-        $products = Product::with('category', 'unit')->get();
+        $products = Product::with(['category', 'unit'])->paginate(10); // Ambil 10 data per halaman
         return view('pages.products.index', compact('products'));
     }
 }

@@ -14,7 +14,7 @@
         <div class="card-header bg-primary text-white text-center" style="border-radius: 10px 10px 0 0;">
             
             <div class="card-tools">
-                <a href="{{ route('pages.categories.create') }}" class="btn btn-light btn-sm">+ Tambah Kategori</a>
+                <a href="{{ route('pages.penggunas.create') }}" class="btn btn-light btn-sm">+ Tambah Kategori</a>
             </div>
         </div>
 
@@ -27,8 +27,8 @@
             @endif
 
             {{-- Tabel daftar kategori --}}
-            <table class="table table-striped table-hover text-center">
-                <thead class="bg-secondary text-white">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
                     <tr>
                         <th style="width: 5%;">No</th>
                         <th style="width: 65%;">Nama Kategori</th>

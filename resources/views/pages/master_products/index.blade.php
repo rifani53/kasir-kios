@@ -25,8 +25,8 @@
                 </div>
             @endif
 
-            <table class="table table-striped table-hover text-center">
-                <thead class="bg-secondary text-white">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
                     <tr>
                         <th style="width: 10%;">No</th>
                         <th style="width: 60%;">Nama Produk</th>

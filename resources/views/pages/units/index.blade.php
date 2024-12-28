@@ -12,7 +12,7 @@
 <div class="d-flex justify-content-center">
     <div class="card shadow-lg" style="width: 90%; border-radius: 10px;">
         <div class="card-header bg-primary text-white text-center" style="border-radius: 10px 10px 0 0;">
-            <h3 class="card-title">Daftar Satuan</h3>
+            
             <div class="card-tools">
                 <a href="{{ route('pages.units.create') }}" class="btn btn-light btn-sm">+ Tambah Satuan</a>
             </div>
@@ -27,8 +27,8 @@
             @endif
 
             {{-- Tabel daftar satuan --}}
-            <table class="table table-striped table-hover text-center">
-                <thead class="bg-secondary text-white">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
                     <tr>
                         <th style="width: 10%;">No</th>
                         <th style="width: 70%;">Nama Satuan</th>

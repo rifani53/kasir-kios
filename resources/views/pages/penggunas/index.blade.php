@@ -27,14 +27,14 @@
             @endif
 
             {{-- Tabel daftar pengguna --}}
-            <table class="table table-striped table-hover text-center">
-                <thead class="bg-secondary text-white">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
                     <tr>
-                        <th style="width: 5%;">No</th>
-                        <th style="width: 25%;">Nama</th>
-                        <th style="width: 30%;">Email</th>
-                        <th style="width: 20%;">Posisi</th>
-                        <th style="width: 20%;">Aksi</th>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Posisi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

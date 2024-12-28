@@ -12,37 +12,37 @@
 <div class="d-flex justify-content-center">
     <div class="card shadow-lg" style="width: 90%; border-radius: 10px;">
         <div class="card-header bg-primary text-white text-center" style="border-radius: 10px 10px 0 0;">
+            
             <div class="card-tools">
                 <a href="{{ route('pages.products.create') }}" class="btn btn-light btn-sm">+ Tambah Produk</a>
             </div>
         </div>
-
+        <!-- Body Card -->
         <div class="card-body">
-            {{-- Pesan sukses setelah operasi berhasil --}}
             @if (session('success'))
                 <div class="alert alert-success text-center">
                     {{ session('success') }}
                 </div>
             @endif
 
-            {{-- Tabel daftar produk --}}
-            <table class="table table-striped table-hover text-center">
-                <thead class="bg-secondary text-white">
+            <!-- Tabel Produk -->
+            <table class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
                     <tr>
-                        <th style="width: 5%;">No</th>
-                        <th style="width: 20%;">Nama Produk</th>
-                        <th style="width: 10%;">Jenis</th>
-                        <th style="width: 10%;">Merek</th>
-                        <th style="width: 10%;">Ukuran</th>
-                        <th style="width: 10%;">Harga</th>
-                        <th style="width: 5%;">Stok</th>
-                        <th style="width: 10%;">Kategori</th>
-                        <th style="width: 10%;">Satuan</th>
-                        <th style="width: 15%;">Aksi</th>
+                        <th>No</th>
+                        <th>Nama Produk</th>
+                        <th>Jenis</th>
+                        <th>Merek</th>
+                        <th>Ukuran</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Kategori</th>
+                        <th>Satuan</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($products as $product)
+                    @forelse ($products as $product)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $product->nama }}</td>
@@ -55,31 +55,31 @@
                             <td>{{ $product->unit->name }}</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    {{-- Tombol Edit --}}
-                                    <a href="{{ route('pages.products.edit', $product->id) }}" 
-                                       class="btn btn-warning btn-sm">
-                                       <i class="fas fa-edit"></i> Edit
+                                    <a href="{{ route('pages.products.edit', $product->id) }}" class="btn btn-warning btn-sm mr-1">
+                                        <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    {{-- Tombol Hapus --}}
-                                    <form action="{{ route('pages.products.destroy', $product->id) }}" 
-                                          method="POST" style="display: inline;">
+                                    <form action="{{ route('pages.products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" 
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash-alt"></i> Hapus
                                         </button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="10" class="text-center">Tidak ada data produk</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
+        <!-- Footer Card -->
         <div class="card-footer text-center bg-light">
-            <p class="text-muted m-0">Daftar produk Anda akan tampil di sini</p>
+            <p class="text-muted mb-0">Total produk: {{ $products->count() }}</p>
         </div>
     </div>
 </div>
