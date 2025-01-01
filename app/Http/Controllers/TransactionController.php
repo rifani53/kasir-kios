@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Services\FonnteService;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Services\DropboxTokenProvider;
 use Illuminate\Support\Facades\Session;
 
@@ -105,13 +106,27 @@ class TransactionController extends Controller
 
     // Menyelesaikan transaksi
     // Menyelesaikan transaksi
-    public function completeCart()
-    {
+    public function completeCart(Request $request)
+{
     $cart = session()->get('cart', []);
     if (empty($cart)) {
         return redirect()->back()->with('error', 'Keranjang kosong.');
     }
 
+    // Hitung total harga
+    $totalHarga = array_sum(array_map(function ($item) {
+        return $item['quantity'] * $item['price'];
+    }, $cart));
+
+    // Validasi input uang pelanggan
+    $request->validate([
+        'customer_money' => ['required', 'numeric', 'min:' . $totalHarga],
+    ]);
+
+    $customerMoney = $request->input('customer_money');
+    $change = $customerMoney - $totalHarga;
+
+    // Simpan transaksi
     $transaction = Transaction::create(['status' => 'completed']);
 
     foreach ($cart as $productId => $item) {
@@ -122,6 +137,7 @@ class TransactionController extends Controller
         }
 
         TransactionDetail::create([
+            'pengguna_id' => Auth::id(),
             'transaction_id' => $transaction->id,
             'product_id' => $product->id,
             'quantity' => $item['quantity'],
@@ -132,7 +148,7 @@ class TransactionController extends Controller
     }
 
     // Buat PDF dari struk transaksi
-    $pdf = $this->generateReceiptPDF($transaction);
+    $pdf = $this->generateReceiptPDF($transaction, $customerMoney, $change);
 
     // Simpan sementara ke storage lokal
     $filePath = storage_path("app/public/struk-transaksi-{$transaction->id}.pdf");
@@ -151,14 +167,31 @@ class TransactionController extends Controller
     // Kosongkan keranjang
     session()->forget('cart');
 
-    return redirect()->route('pages.transactions.success', ['transactionId' => $transaction->id]);
-    }
-    public function success($transactionId)
-    {
-        $transaction = Transaction::with('details.product.category')->findOrFail($transactionId);
+    // Redirect ke halaman sukses dengan data tambahan
+    return redirect()->route('pages.transactions.success', [
+        'transactionId' => $transaction->id,
+        'customer_money' => $customerMoney,
+        'change' => $change,
 
-        return view('pages.transactions.success', compact('transaction'));
+        // Setelah menyelesaikan transaksi (misalnya di fungsi completeCart)
+    session([
+        'customer_money' => $customerMoney,
+        'change' => $change,
+    ]),
+
+    ]);
+}
+
+    public function success($transactionId, Request $request)
+    {
+        $transaction = Transaction::with('details.product.category', 'details.pengguna')->findOrFail($transactionId);
+
+        $customerMoney = session('customer_money');
+        $change = session('change');
+
+        return view('pages.transactions.success', compact('transaction', 'customerMoney', 'change'));
     }
+
 
     public function searchProduct(Request $request)
     {
@@ -175,45 +208,80 @@ class TransactionController extends Controller
     {
         $search = $request->get('search');
 
-        $transactions = TransactionDetail::with('product.category', 'transaction')
-            ->when($search, fn($query) => $query->whereHas('product', fn($query) => $query->where('nama', 'like', '%' . $search . '%')
-                ->orWhereHas('category', fn($query) => $query->where('name', 'like', '%' . $search . '%'))))
-            ->whereHas('transaction', fn($query) => $query->whereIn('status', ['completed', 'cancelled']))
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $transactions = TransactionDetail::with('product.category', 'transaction', 'pengguna') // Tambahkan 'pengguna' ke relasi yang dimuat
+    ->when($search, function ($query) use ($search) {
+        $query->whereHas('product', function ($query) use ($search) {
+            $query->where('nama', 'like', '%' . $search . '%')
+                ->orWhereHas('category', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                });
+        })->orWhereHas('pengguna', function ($query) use ($search) {
+            $query->where('name', 'like', '%' . $search . '%'); // Cari berdasarkan nama kasir
+        });
+    })
+    ->whereHas('transaction', fn($query) => $query->whereIn('status', ['completed', 'cancelled']))
+    ->orderBy('created_at', 'desc')
+    ->get();
+
 
         return view('pages.transactions.history', compact('transactions'));
     }
 
     // Membuat PDF dari struk
-    private function generateReceiptPDF($transaction)
+    public function generateReceiptPDF($transaction, $customerMoney, $change)
     {
-        return PDF::loadView('pages.transactions.receipt', compact('transaction'));
+    $data = [
+        'transaction' => $transaction,
+        'customer_money' => $customerMoney,
+        'change' => $change,
+    ];
+
+    return PDF::loadView('pages.transactions.receipt', $data);
     }
+
 
     public function printReceipt($transactionId)
-    {
-        $transaction = Transaction::with('details.product.category')->findOrFail($transactionId);
-        $pdf = $this->generateReceiptPDF($transaction);
-        return $pdf->stream('struk-transaksi-' . $transaction->id . '.pdf');
-    }
-
-    public function downloadReceipt($transactionId)
-    {
-        $transaction = Transaction::with('details.product.category')->findOrFail($transactionId);
-        $pdf = $this->generateReceiptPDF($transaction);
-        return $pdf->download('struk-transaksi-' . $transaction->id . '.pdf');
-    }
-    public function sendToWA(Request $request, $transactionId)
 {
+    $transaction = Transaction::with('details.product.category', 'details.pengguna')->findOrFail($transactionId);
+
+    // Ambil data dari session
+    $customerMoney = session('customer_money', 0);
+    $change = session('change', 0);
+
+    $pdf = $this->generateReceiptPDF($transaction, $customerMoney, $change);
+
+    return $pdf->stream('struk-transaksi-' . $transaction->id . '.pdf');
+}
+
+public function downloadReceipt($transactionId)
+{
+    $transaction = Transaction::with('details.product.category', 'details.pengguna')->findOrFail($transactionId);
+
+    // Ambil data dari session
+    $customerMoney = session('customer_money', 0);
+    $change = session('change', 0);
+
+    $pdf = $this->generateReceiptPDF($transaction, $customerMoney, $change);
+
+    return $pdf->download('struk-transaksi-' . $transaction->id . '.pdf');
+}
+
+
+
+    public function sendToWA(Request $request, $transactionId)
+    {
     $request->validate([
         'whatsapp_number' => 'required|regex:/^[0-9]{10,15}$/',
     ]);
 
-    $transaction = Transaction::with('details.product.category')->findOrFail($transactionId);
+    $transaction = Transaction::with('details.product.category', 'details.pengguna')->findOrFail($transactionId);
+
+    // Ambil data uang pelanggan dan kembalian
+    $customerMoney = $request->input('customer_money', 0);
+    $change = $request->input('change', 0);
 
     // Generate PDF struk transaksi
-    $pdf = $this->generateReceiptPDF($transaction);
+    $pdf = $this->generateReceiptPDF($transaction, $customerMoney, $change);
 
     // Simpan sementara file PDF
     $localFilePath = storage_path("app/public/struk-transaksi-{$transaction->id}.pdf");

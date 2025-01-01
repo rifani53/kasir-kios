@@ -24,21 +24,23 @@
                 <tr>
                     <th>No</th>
                     <th>Produk</th>
+                    <th>Kasir</th>
                     <th>Jumlah</th>
                     <th>Total Harga</th>
                     <th>Tanggal</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($transactions as $transaction)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $transaction->product->nama }}</td>
-                    <td>{{ $transaction->quantity }}</td>
-                    <td>Rp {{ number_format($transaction->subtotal, 2) }}</td>
-                    <td>{{ $transaction->created_at->format('d-m-Y H:i:s') }}</td>
-                </tr>
-                @endforeach
+                @foreach ($transactions as $transaction)
+            <tr>
+                <td>{{ $transaction->id }}</td>
+                <td>{{ $transaction->product->nama }}</td>
+                <td>{{ $transaction->pengguna->name ?? 'Tidak Diketahui' }}</td>
+                <td>{{ $transaction->quantity }}</td>
+                <td>{{ number_format($transaction->subtotal, 0, ',', '.') }}</td>
+                <td>{{ $transaction->created_at->format('d M Y') }}</td>
+            </tr>
+            @endforeach
             </tbody>
         </table>
     @endif

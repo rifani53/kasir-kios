@@ -30,25 +30,33 @@ class Laporancontroller extends Controller
 
     // Menampilkan laporan transaksi berdasarkan filter tanggal
     public function index(Request $request)
-    {
-        $startDate = Carbon::parse($request->get('start_date', now()->startOfMonth()))->startOfDay();
-        $endDate = Carbon::parse($request->get('end_date', now()->endOfMonth()))->endOfDay();
+{
+    $startDate = Carbon::parse($request->get('start_date', now()->startOfMonth()))->startOfDay();
+    $endDate = Carbon::parse($request->get('end_date', now()->endOfMonth()))->endOfDay();
 
-        $details = TransactionDetail::whereBetween('created_at', [$startDate, $endDate])
-            ->with(['transaction', 'product']) // Relasi yang dibutuhkan
-            ->get();
+    $details = TransactionDetail::whereBetween('created_at', [$startDate, $endDate])
+        ->with(['transaction', 'product', 'pengguna']) // Tambahkan relasi 'pengguna' untuk memuat data kasir
+        ->get();
 
-        $totalIncome = $details->sum(function ($detail) {
-            return $detail->quantity * ($detail->product->harga ?? 0);
-        });
-
-        return view('pages.laporan.index', [
-            'details' => $details,
-            'startDate' => $startDate->format('Y-m-d'),
-            'endDate' => $endDate->format('Y-m-d'),
-            'totalIncome' => $totalIncome,
-        ]);
+    $totalIncome = $details->sum(function ($detail) {
+        return $detail->quantity * ($detail->product->harga ?? 0);
+    });
+    try {
+        $files = $this->client->listFolder('/Laporan')['entries'];
+    } catch (\Exception $e) {
+        return back()->withErrors(['error' => 'Gagal mendapatkan daftar file dari Dropbox: ' . $e->getMessage()]);
     }
+
+
+    return view('pages.laporan.index', [
+        'details' => $details,
+        'startDate' => $startDate->format('Y-m-d'),
+        'endDate' => $endDate->format('Y-m-d'),
+        'totalIncome' => $totalIncome,
+        'files' => $files
+    ]);
+}
+
 
     // Mengekspor laporan dan mengunggahnya ke Dropbox
     public function export(Request $request)
@@ -74,15 +82,7 @@ class Laporancontroller extends Controller
     }
 
     // Menampilkan daftar file dari Dropbox
-    public function showDropboxFiles()
-    {
-        try {
-            $files = $this->client->listFolder('/Laporan')['entries'];
-            return view('pages.dropbox.dropbox_files', compact('files'));
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Gagal mendapatkan daftar file dari Dropbox: ' . $e->getMessage()]);
-        }
-    }
+
 
     // Mengunduh file dari Dropbox
     public function downloadDropboxFile($fileName)

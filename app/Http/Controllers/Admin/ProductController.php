@@ -67,9 +67,9 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $categories = Category::all(); 
-        $units = Unit::all(); 
-        $masterProducts = MasterProduct::all(); 
+        $categories = Category::all();
+        $units = Unit::all();
+        $masterProducts = MasterProduct::all();
 
         return view('pages.products.edit', compact('product', 'categories', 'units', 'masterProducts'));
     }
@@ -79,8 +79,14 @@ class ProductController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
+<<<<<<< HEAD
             'merek' => 'required|string|max:255', 
             'ukuran' => 'required|string|max:255', 
+=======
+            'jenis' => 'required|string|max:255',
+            'merek' => 'required|string|max:255',
+            'ukuran' => 'required|string|max:255',
+>>>>>>> WhatshAppIntegrasi
             'harga' => 'required|numeric',
             'stok' => 'required|integer',
             'category_id' => 'required|exists:categories,id',
@@ -90,7 +96,12 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update([
             'nama' => $request->nama,
+<<<<<<< HEAD
             'merek' => $request->merek, 
+=======
+            'jenis' => $request->jenis,
+            'merek' => $request->merek,
+>>>>>>> WhatshAppIntegrasi
             'ukuran' => $request->ukuran,
             'harga' => $request->harga,
             'stok' => $request->stok,
@@ -116,4 +127,27 @@ class ProductController extends Controller
         $products = Product::with(['category', 'unit'])->paginate(10); // Ambil 10 data per halaman
         return view('pages.products.index', compact('products'));
     }
+    public function search(Request $request)
+{
+    $query = $request->get('query');
+
+    if (!$query) {
+        return response()->json([]);
+    }
+
+    $products = Product::where('nama', 'like', "%{$query}%")
+    ->orWhereHas('category', function ($q) use ($query) {
+        $q->where('name', 'like', "%{$query}%");
+    })
+    ->with('category')
+    ->get()
+    ->map(function ($product) {
+        $product->cart_add_url = route('transactions.cart.add', ['id' => $product->id]);
+        return $product;
+    });
+    session(['search_results' => $products]);
+
+return response()->json($products);
+}
+
 }
