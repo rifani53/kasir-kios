@@ -3,7 +3,7 @@
 @section('header')
 <div class="row mb-2 justify-content-center">
     <div class="col-md-8 text-center">
-        <h1>Daftar Produk</h1>
+        <h1>Daftar Nama Produk</h1>
     </div>
 </div>
 @endsection

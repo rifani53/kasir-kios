@@ -31,7 +31,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Produk</th>
-                        <th>Jenis</th>
+                        
                         <th>Merek</th>
                         <th>Ukuran</th>
                         <th>Harga</th>
@@ -46,7 +46,6 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $product->nama }}</td>
-                            <td>{{ $product->jenis }}</td>
                             <td>{{ $product->merek }}</td>
                             <td>{{ $product->ukuran }}</td>
                             <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>

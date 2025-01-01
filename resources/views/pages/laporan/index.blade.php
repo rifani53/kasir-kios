@@ -1,15 +1,12 @@
 @extends('layouts.main')
 
-@section('content')
-<div class="container">
-    <h1>Laporan Transaksi</h1>
-    <form method="POST" action="{{ route('pages.laporan.export') }}">
-        @csrf
-        <input type="hidden" name="start_date" value="{{ $startDate }}">
-        <input type="hidden" name="end_date" value="{{ $endDate }}">
-        <button type="submit" class="btn btn-success">Export Laporan</button>
-    </form>
-    
+    @section('header')
+<div class="row mb-2 justify-content-center">
+    <div class="col-md-8 text-center">
+        <h1>Laporan Transaksi</h1>
+    </div>
+</div>
+
     <!-- Filter Laporan -->
     <form method="GET" action="{{ route('pages.laporan.index') }}" class="mb-4">
         <div class="row">
