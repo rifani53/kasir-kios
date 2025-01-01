@@ -1,6 +1,6 @@
 <?php
  use App\Http\Controllers\Perinkingancontroller;
-use App\Http\Controllers\Laporancontroller;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Auth\LoginController;
@@ -37,7 +37,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('pages.laporan.index');
-    Route::post('/laporan/export', [Laporancontroller::class, 'export'])->name('pages.laporan.export');
+    Route::post('/laporan/export', [LaporanController::class, 'export'])->name('pages.laporan.export');
+    Route::get('/dropbox/dropbox-files', [LaporanController::class, 'showDropboxFiles'])->name('pages.dropbox.dropbox_files');
     Route::get('/dropbox/dropbox-files/download/{fileName}', [LaporanController::class, 'downloadDropboxFile'])->name('pages.dropbox.download');
     Route::get('/dropbox/temporary-link/{filePath}', [LaporanController::class, 'getTemporaryLink'])->name('pages.dropbox.temporary-link');
     Route::delete('/dropbox/delete/{fileName}', [LaporanController::class, 'deleteDropboxFile'])->name('pages.dropbox.delete');
@@ -125,6 +126,4 @@ Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('transactions/download-receipt/{transactionId}', [TransactionController::class, 'downloadReceipt'])->name('transactions.downloadReceipt');
     Route::get('/transaksi/cari-produk', [TransactionController::class, 'searchProduct'])->name('transactions.search');
     Route::post('/transactions/{id}/send-to-wa', [TransactionController::class, 'sendToWA'])->name('transactions.sendToWA');
-    Route::get('/search-product', [ProductController::class, 'search'])->name('search.product');
-
 });

@@ -4,20 +4,8 @@
 <div class="container mt-4">
     <h1>Transaksi Sukses</h1>
 
-    <!-- Header -->
-    <div class="header">
-        <h1>Kios Anis</h1>
-        <p>Alamat: Desa Bluru, Kec. Batu Ampar, Kabupaten Tanah Laut</p>
-        <p><strong>Struk Transaksi</strong></p>
-    </div>
-
     <p><strong>ID Transaksi:</strong> {{ $transaction->id }}</p>
     <p><strong>Tanggal:</strong> {{ $transaction->created_at->format('d-m-Y H:i') }}</p>
-    <p><strong>Kasir:</strong> {{ $transaction->details->first()->pengguna->name ?? 'Tidak Diketahui' }}</p>
-    <p><strong>Uang Pelanggan:</strong> Rp {{ number_format($customerMoney, 0, ',', '.') }}</p>
-    <p><strong>Kembalian:</strong> Rp {{ number_format($change, 0, ',', '.') }}</p>
-
-
 
     <table class="table table-bordered">
         <thead>

@@ -139,7 +139,6 @@
             }
         });
 
-
         // Menangani klik pada hasil sugesti
         $('#suggestions').on('click', 'li', function () {
             const id = $(this).data('id');
@@ -177,6 +176,5 @@
         });
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
