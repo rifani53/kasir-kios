@@ -66,6 +66,12 @@
     <!-- Informasi Transaksi -->
     <p><strong>ID Transaksi:</strong> {{ $transaction->id }}</p>
     <p><strong>Tanggal:</strong> {{ $transaction->created_at->format('d-m-Y H:i') }}</p>
+    <p><strong>Kasir:</strong> {{ $transaction->details->first()->pengguna->name ?? 'Tidak Diketahui' }}</p>
+    <p><strong>Total Harga:</strong> Rp {{ number_format($transaction->details->sum('subtotal'), 0, ',', '.') }}</p>
+    <p><strong>Uang Pelanggan:</strong> Rp {{ number_format($customer_money, 0, ',', '.') }}</p>
+    <p><strong>Kembalian:</strong> Rp {{ number_format($change, 0, ',', '.') }}</p>
+
+
 
     <!-- Tabel Produk -->
     <table>
