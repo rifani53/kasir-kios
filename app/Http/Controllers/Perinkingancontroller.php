@@ -3,11 +3,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\TransactionDetail;
 
 class Perinkingancontroller extends Controller
 {
     // Mendapatkan data produk dengan informasi tambahan
-    public function getProductData($month = null, $year = null)
+    public function getProductData($startDate = null, $endDate = null)
     {
         $query = DB::table('products')
             ->select('id', 'nama', 'harga',
@@ -15,17 +17,14 @@ class Perinkingancontroller extends Controller
                 DB::raw('(SELECT COUNT(*) FROM transactions WHERE transactions.id IN (SELECT transaction_id FROM transaction_details WHERE product_id = products.id)) as total_transactions')
             );
 
-        // Filter berdasarkan bulan dan tahun jika diberikan
-        if ($month && $year) {
-            $query->whereIn('id', function ($subquery) use ($month, $year) {
-                $subquery->select('product_id')
-                    ->from('transaction_details')
-                    ->whereIn('transaction_id', function ($subsubquery) use ($month, $year) {
-                        $subsubquery->select('id')
-                            ->from('transactions')
-                            ->whereMonth('created_at', $month)
-                            ->whereYear('created_at', $year);
-                    });
+        // Filter berdasarkan rentang tanggal transaksi
+        if ($startDate && $endDate) {
+            $query->whereExists(function ($subQuery) use ($startDate, $endDate) {
+                $subQuery->select(DB::raw(1))
+                    ->from('transactions')
+                    ->join('transaction_details', 'transactions.id', '=', 'transaction_details.transaction_id')
+                    ->whereRaw('transaction_details.product_id = products.id')
+                    ->whereBetween('transactions.created_at', [$startDate, $endDate]);
             });
         }
 
@@ -82,17 +81,26 @@ class Perinkingancontroller extends Controller
         return view('pages.top_products.normalized', ['products' => $normalizedProducts]);
     }
 
-    // Tampilkan skor akhir dengan filter bulan/tahun
+    // Tampilkan skor akhir dengan filter bulan/tahun atau tanggal
     public function showFinalScores(Request $request)
     {
-        $month = $request->input('month', now()->month); // Default ke bulan ini
-        $year = $request->input('year', now()->year);   // Default ke tahun ini
+        // Mendapatkan start_date dan end_date dari request, jika tidak ada, gunakan bulan ini
+        $startDate = Carbon::parse($request->get('start_date', now()->startOfMonth()->format('Y-m-d')))->startOfDay();
+        $endDate = Carbon::parse($request->get('end_date', now()->endOfMonth()->format('Y-m-d')))->endOfDay();
 
-        $products = $this->getProductData($month, $year);
+        // Ambil data produk dengan filter berdasarkan rentang tanggal
+        $products = $this->getProductData($startDate, $endDate);
+
+        // Normalisasi data
         $normalizedProducts = $this->normalizeData($products);
+
+        // Hitung skor
         $finalProducts = $this->calculateScores($normalizedProducts);
 
+        // Urutkan berdasarkan skor tertinggi
         $sortedProducts = $finalProducts->sortByDesc('score');
+
+        // Berikan peringkat
         $rank = 1;
         foreach ($sortedProducts as $product) {
             $product->rank = $rank++;
@@ -100,11 +108,12 @@ class Perinkingancontroller extends Controller
 
         $topProduct = $sortedProducts->first();
 
+        // Kirim data ke view
         return view('pages.top_products.final', [
             'products' => $sortedProducts,
             'topProduct' => $topProduct,
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d'),
         ]);
     }
 }

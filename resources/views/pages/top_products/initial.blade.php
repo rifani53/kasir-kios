@@ -4,10 +4,10 @@
 <div class="container">
     <div class="mt-1">
         <a href="{{ route('pages.top_products.initial') }}" class="btn btn-primary">Data Awal</a>
-        <a href="{{ route('pages.top_products.normalized') }}" class="btn btn-secondary">Data Normalisasi</a>
-        <a href="{{ route('pages.top_products.final') }}" class="btn btn-success">Skor Akhir</a>
+        <a href="{{ route('pages.top_products.normalized') }}" class="btn btn-secondary">Perhitungan</a>
+        <a href="{{ route('pages.top_products.final') }}" class="btn btn-success">Hasil Akhir</a>
         <h2 class="text-center">Data Awal Produk</h2>
-    
+
         <!-- Tabel Data Produk -->
         <table class="table table-bordered">
             <thead>

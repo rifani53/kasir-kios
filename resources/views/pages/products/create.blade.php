@@ -43,15 +43,6 @@
                 @enderror
             </div>
 
-            <!-- Input Jenis Produk -->
-            <div class="form-group">
-                <label for="jenis">Jenis Produk</label>
-                <input type="text" name="jenis" id="jenis" class="form-control @error('jenis') is-invalid @enderror" required>
-                @error('jenis')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-
             <!-- Input Merek Produk -->
             <div class="form-group">
                 <label for="merek">Merek Produk</label>
@@ -60,7 +51,7 @@
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
-            
+
             <!-- Input Ukuran Produk -->
             <div class="form-group">
                 <label for="ukuran">Ukuran Produk</label>
