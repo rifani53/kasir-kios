@@ -12,9 +12,8 @@
 <div class="d-flex justify-content-center">
     <div class="card shadow-lg" style="width: 80%; border-radius: 10px;">
         <div class="card-header bg-primary text-white text-center" style="border-radius: 10px 10px 0 0;">
-
             <div class="card-tools">
-                <a href="{{ route('pages.penggunas.create') }}" class="btn btn-light btn-sm">+ Tambah Kategori</a>
+                <a href="{{ route('pages.categories.create') }}" class="btn btn-light btn-sm">+ Tambah Kategori</a>
             </div>
         </div>
 

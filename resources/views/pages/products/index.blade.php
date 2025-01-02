@@ -31,7 +31,6 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Produk</th>
-
                         <th>Merek</th>
                         <th>Ukuran</th>
                         <th>Harga</th>

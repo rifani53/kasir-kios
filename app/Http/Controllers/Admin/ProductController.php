@@ -27,7 +27,6 @@ class ProductController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
             'ukuran' => 'required|string|max:255',
             'harga' => 'required|numeric',
@@ -53,7 +52,6 @@ class ProductController extends Controller
             // Jika produk tidak ditemukan, buat produk baru
             Product::create([
                 'nama' => $request->nama,
-                'jenis' => $request->jenis,
                 'merek' => $request->merek,
                 'ukuran' => $request->ukuran,
                 'harga' => $request->harga,
@@ -82,7 +80,6 @@ class ProductController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
             'ukuran' => 'required|string|max:255',
             'harga' => 'required|numeric',
@@ -94,7 +91,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update([
             'nama' => $request->nama,
-            'jenis' => $request->jenis,
             'merek' => $request->merek,
             'ukuran' => $request->ukuran,
             'harga' => $request->harga,
