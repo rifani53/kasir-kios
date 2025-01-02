@@ -94,5 +94,4 @@
     console.log('Modal terbuka');
 });
 </script>
-
 @endsection

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Struk Transaksi</title>
     <style>
+        
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;

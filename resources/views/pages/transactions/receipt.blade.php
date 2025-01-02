@@ -22,6 +22,7 @@
             font-size: 14px;
             color: #555;
         }
+        
         table {
             width: 100%;
             border-collapse: collapse;

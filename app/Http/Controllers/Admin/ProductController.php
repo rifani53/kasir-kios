@@ -128,7 +128,6 @@ class ProductController extends Controller
     if (!$query) {
         return response()->json([]);
     }
-
     $products = Product::where('nama', 'like', "%{$query}%")
     ->orWhereHas('category', function ($q) use ($query) {
         $q->where('name', 'like', "%{$query}%");

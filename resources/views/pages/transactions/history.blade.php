@@ -3,7 +3,6 @@
 @section('content')
 <div class="container mt-4">
     <h1>Riwayat Transaksi</h1>
-
     <!-- Form Pencarian -->
     <form method="GET" action="{{ route('pages.transactions.history') }}" class="mb-4">
         <div class="row">

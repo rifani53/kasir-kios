@@ -102,7 +102,6 @@
     </div>
 </div>
 @endsection
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-product');

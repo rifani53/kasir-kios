@@ -26,7 +26,6 @@ class DropboxTokenProvider implements TokenProvider
         return $accessToken;
     }
 
-
  // Mengecek apakah token kedaluwarsa
  private function isTokenExpired(string $accessToken): bool
  {

@@ -12,7 +12,6 @@
             Lihat File Laporan di Dropbox
         </button>
     </form>
-
     <div class="modal fade" id="dropboxModal" tabindex="-1" aria-labelledby="dropboxModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

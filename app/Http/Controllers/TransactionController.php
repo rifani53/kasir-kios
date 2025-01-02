@@ -304,11 +304,11 @@ public function downloadReceipt($transactionId)
         // Hapus file lokal setelah berhasil diunggah
         unlink($localFilePath);
 
-        return redirect()->route('pages.transactions.success', ['transactionId' => $transaction->id])
-            ->with('success', 'Struk berhasil dikirim ke WhatsApp!');
-    } catch (\Exception $e) {
-        unlink($localFilePath); // Pastikan file lokal dihapus jika terjadi kesalahan
-        return back()->with('error', 'Gagal mengirim struk ke WhatsApp: ' . $e->getMessage());
+            return redirect()->route('pages.transactions.success', ['transactionId' => $transaction->id])
+                ->with('success', 'Struk berhasil dikirim ke WhatsApp!');
+        } catch (\Exception $e) {
+            unlink($localFilePath); // Pastikan file lokal dihapus jika terjadi kesalahan
+            return back()->with('error', 'Gagal mengirim struk ke WhatsApp: ' . $e->getMessage());
+        }
     }
-}
 }

@@ -9,6 +9,7 @@ class FonnteService
     protected $apiKey;
 
     public function __construct()
+    
     {
         $this->apiKey = env('FONNTE_API_KEY', 'your-fonnte-api-key');
     }

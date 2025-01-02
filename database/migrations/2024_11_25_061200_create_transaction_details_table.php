@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    
     public function up()
 {
     Schema::create('transaction_details', function (Blueprint $table) {

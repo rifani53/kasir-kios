@@ -6,7 +6,6 @@ use Spatie\Dropbox\Client;
 use App\Services\FonnteService;
 use App\Services\DropboxTokenProvider;
 use Illuminate\Support\ServiceProvider;
-
 class DropboxServiceProvider extends ServiceProvider
 {
 /**
